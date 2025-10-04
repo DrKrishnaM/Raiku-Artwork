@@ -8,7 +8,7 @@
  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
  <style>
  body {
- background: #000000; /* Pure black background */
+ background: #000000;
  font-family: 'Poppins', sans-serif;
  color: #ffffff;
  font-weight: bold;
@@ -28,7 +28,7 @@
  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.1);
  }
  .navbar-brand {
- color: #ffff00 !important; /* Yellow Raiku */
+ color: #ffff00 !important;
  font-weight: bold !important;
  font-size: 3rem !important;
  }
@@ -56,7 +56,7 @@
  font-weight: bold !important;
  }
  .btn-primary {
- background: linear-gradient(45deg, #ff00ff, #00ffff); /* Magenta to cyan gradient */
+ background: linear-gradient(45deg, #ff00ff, #00ffff);
  border: none;
  border-radius: 25px;
  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.5s ease;
@@ -114,7 +114,7 @@
  opacity: 0;
  animation: cardFadeIn 0.5s ease forwards;
  animation-delay: calc(var(--i) * 0.1s);
- text-align: center; /* Center align card content */
+ text-align: center;
  }
  .gallery-card:hover {
  transform: translateY(-10px);
@@ -153,6 +153,67 @@
  }
  .card-body p, .card-body h5 {
  margin-bottom: 5px;
+ }
+ /* Success Modal */
+ .success-modal .modal-content {
+ background: linear-gradient(45deg, #ff00ff, #00ffff);
+ border: none;
+ text-align: center;
+ padding: 20px;
+ }
+ .success-modal .modal-body {
+ position: relative;
+ overflow: hidden;
+ }
+ .success-modal .modal-body::before {
+ content: '✔';
+ font-size: 50px;
+ color: #ffffff;
+ display: block;
+ margin-bottom: 10px;
+ animation: checkmark 0.5s ease-in-out;
+ }
+ .success-modal .modal-body::after {
+ content: '';
+ position: absolute;
+ top: 0;
+ left: 0;
+ width: 100%;
+ height: 100%;
+ background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="10" cy="10" r="5" fill="white"/><circle cx="30" cy="30" r="5" fill="white"/><circle cx="50" cy="10" r="5" fill="white"/></svg>') repeat;
+ opacity: 0.3;
+ animation: confetti 2s ease infinite;
+ }
+ .success-modal .btn-primary {
+ background: #000000;
+ color: #ffffff;
+ }
+ /* Toast Notification */
+ .toast {
+ background: linear-gradient(45deg, #ff00ff, #00ffff);
+ border: none;
+ color: #ffffff;
+ font-weight: bold;
+ border-radius: 10px;
+ box-shadow: 0 4px 10px rgba(255, 255, 255, 0.3);
+ animation: slideIn 0.5s ease, fadeOut 0.5s ease 3s forwards;
+ z-index: 2000;
+ }
+ @keyframes checkmark {
+ 0% { transform: scale(0); opacity: 0; }
+ 100% { transform: scale(1); opacity: 1; }
+ }
+ @keyframes confetti {
+ 0% { background-position: 0 0; }
+ 100% { background-position: 100px 100px; }
+ }
+ @keyframes slideIn {
+ from { transform: translateX(100%); opacity: 0; } 
+ to { transform: translateX(0); opacity: 1; }
+ }
+ @keyframes fadeOut {
+ from { opacity: 1; }
+ to { opacity: 0; }
  }
  @keyframes fadeIn {
  from { opacity: 0; transform: translateY(20px); }
@@ -239,6 +300,18 @@
  </div>
  </div>
 
+ <!-- Success Modal -->
+ <div class="modal fade success-modal" id="successModal" tabindex="-1">
+ <div class="modal-dialog modal-sm">
+ <div class="modal-content">
+ <div class="modal-body">
+ <p>Boom! Your Art is Live! 🎨</p>
+ <button class="btn btn-primary" onclick="window.location.href='#gallery'">Check It Out</button>
+ </div>
+ </div>
+ </div>
+ </div>
+
  <!-- Admin Modal -->
  <div class="modal fade" id="adminLoginModal" tabindex="-1">
  <div class="modal-dialog">
@@ -249,7 +322,7 @@
  </div>
  <div class="modal-body">
  <form id="adminLoginForm">
- <div class="mb-3"><label>Email</label><input type="email" class="form-control" id="adminEmail" value="krrishmuley@gmail.com" required></div>
+ <div class="mb-3"><label>Email</label><input type="text" class="form-control" id="adminEmail" value="krrishmuley@gmail.com" required></div>
  <div class="mb-3"><label>Password</label><input type="password" class="form-control" id="adminPassword" required></div>
  <button type="submit" class="btn btn-primary">Login</button>
  </form>
@@ -342,7 +415,7 @@
  const { error: dbError } = await client
  .from('Artworks')
  .insert([{
- artistName: toTitleCase(artistName),
+ artistName: toTitle Case(artistName),
  xUsername,
  discordUsername,
  description: artDescription,
@@ -352,7 +425,20 @@
 
  if (dbError) return alert('Database error: ' + dbError.message);
 
- alert('Artwork Uploaded!');
+ // Randomly show modal or toast
+ if (Math.random() < 0.5) {
+ const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+ successModal.show();
+ setTimeout(() => successModal.hide(), 3000);
+ } else {
+ const toast = document.createElement('div');
+ toast.className = 'toast position-fixed top-0 end-0 m-3';
+ toast.innerHTML = '<div class="toast-body">Your Masterpiece is Now in the Gallery! 🔥</div>';
+ document.body.appendChild(toast);
+ new bootstrap.Toast(toast).show();
+ setTimeout(() => toast.remove(), 3500);
+ }
+
  document.getElementById('artUploadForm').reset();
  bootstrap.Modal.getInstance(document.getElementById('uploadModal')).hide();
  loadGallery();
