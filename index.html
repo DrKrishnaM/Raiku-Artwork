@@ -19,7 +19,7 @@
  @media (min-width: 768px) {
  body {
  background: url('https://github.com/krishna077272/raiku-image/raw/main/photo_2025-10-01_18-33-44.jpg') no-repeat center center fixed;
- background-size: cover;
+ background-size: 70%; /* Zoomed out further for better visibility */
  }
  }
  .navbar {
@@ -68,6 +68,8 @@
  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.5s ease;
  position: relative;
  overflow: hidden;
+ padding: 15px 30px; /* 1.5x size */
+ font-size: 1.5rem; /* 1.5x font size */
  }
  .btn-primary::before {
  content: '';
@@ -193,6 +195,8 @@
  .success-modal .btn-primary {
  background: #000000;
  color: #ffffff;
+ padding: 15px 30px; /* 1.5x size */
+ font-size: 1.5rem; /* 1.5x font size */
  }
  @keyframes checkmark {
  0% { transform: scale(0); opacity: 0; }
@@ -220,8 +224,8 @@
  margin-bottom: 20px;
  }
  .btn-primary, .btn-danger {
- padding: 10px 20px;
- font-size: 14px;
+ padding: 10px 20px; /* Keep mobile button size smaller */
+ font-size: 1rem; /* Keep mobile font size smaller */
  }
  .navbar-brand {
  font-size: 2rem !important;
@@ -275,7 +279,7 @@
  </div>
  <div class="modal-body">
  <form id="artUploadForm">
- <div class ="mb-3"><label>Artist Name</label><input type="text" class="form-control" id="artistName" required></div>
+ <div class="mb-3"><label>Artist Name</label><input type="text" class="form-control" id="artistName" required></div>
  <div class="mb-3"><label>X Username</label><input type="text" class="form-control" id="xUsername" placeholder="@username" required></div>
  <div class="mb-3"><label>Discord Username</label><input type="text" class="form-control" id="discordUsername" placeholder="User#1234" required></div>
  <div class="mb-3"><label>Upload Image</label><input type="file" class="form-control" id="artImage" accept="image/*" required></div>
@@ -370,7 +374,7 @@
  if (error) return alert('Login failed: ' + error.message);
  if (email === adminEmail) {
  isAdminLoggedIn = true;
- alert(' Admin Logged In!');
+ alert('Admin Logged In!');
  document.getElementById('adminLogin').innerText = 'Admin Logout';
  bootstrap.Modal.getInstance(document.getElementById('adminLoginModal')).hide();
  loadGallery();
@@ -396,7 +400,7 @@
 
  if (uploadError) return alert('Upload failed: ' + uploadError.message);
 
- const { data: urlData } = client.storage.from('artworks').getPublicUrl(fileName);
+ const { data: urlData } = client.storage.from('artworks ').getPublicUrl(fileName);
  const imageUrl = urlData.publicUrl;
 
  const { error: dbError } = await client
