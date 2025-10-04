@@ -14,51 +14,127 @@
       font-weight: bold;
       margin: 0;
       min-height: 100vh;
+      overflow-x: hidden;
     }
     .navbar {
-      background-color: rgba(255, 255, 255, 0.9);
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      background-color: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       position: sticky;
       top: 0;
       z-index: 1000;
+      transition: all 0.3s ease;
+    }
+    .navbar:hover {
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    }
+    .nav-link {
+      position: relative;
+      transition: color 0.3s ease;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background-color: #ff5733;
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after {
+      width: 100%;
     }
     .navbar-brand, .nav-link, h1, h2, h5, p, label, button {
       color: #000000 !important;
       font-weight: bold !important;
     }
     .btn-primary {
-      background-color: #ff5733;
-      border-color: #ff5733;
+      background: linear-gradient(45deg, #ff5733, #ff8d1e);
+      border: none;
+      border-radius: 25px;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     .btn-primary:hover {
-      background-color: #c70039;
-      border-color: #c70039;
-      transform: scale(1.05);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      background: linear-gradient(45deg, #c70039, #e65c00);
+      transform: scale(1.1);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+    .btn-primary:active {
+      animation: pulse 0.3s;
+    }
+    .btn-danger {
+      background: linear-gradient(45deg, #dc3545, #b02a37);
+      border: none;
+      border-radius: 25px;
+      transition: transform 0.2s ease;
     }
     .btn-danger:hover {
-      transform: scale(1.05);
+      transform: scale(1.1);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
     }
     .section {
       padding: 50px 0;
+      animation: fadeIn 1s ease-in;
     }
     .gallery-card {
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      background-color: rgba(255, 255, 255, 0.95);
-      border-radius: 10px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
+      background-color: rgba(255, 255, 255, 0.98);
+      border-radius: 15px;
       overflow: hidden;
+      opacity: 0;
+      animation: cardFadeIn 0.5s ease forwards;
+      animation-delay: calc(var(--i) * 0.1s);
     }
     .gallery-card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      transform: translateY(-10px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+    }
+    .gallery-card img {
+      transition: transform 0.3s ease;
+    }
+    .gallery-card:hover img {
+      transform: scale(1.1);
     }
     .section.bg-light {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(5px);
-      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      border-radius: 20px;
       margin: 20px auto;
       max-width: 1200px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    .modal-content {
+      background-color: rgba(255, 255, 255, 0.98);
+      border-radius: 15px;
+      transform: scale(0.7);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .modal.show .modal-content {
+      transform: scale(1);
+      opacity: 1;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes cardFadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+      100% { transform: scale(1); }
+    }
+    @media (max-width: 768px) {
+      .gallery-card {
+        margin-bottom: 20px;
+      }
+      .btn-primary, .btn-danger {
+        padding: 10px 20px;
+        font-size: 14px;
+      }
     }
   </style>
 </head>
@@ -257,9 +333,10 @@
       }
 
       container.innerHTML = '';
-      data.forEach((art) => {
+      data.forEach((art, index) => {
         const card = document.createElement('div');
         card.className = 'col-md-4 mb-4';
+        card.style.setProperty('--i', index); // For animation delay
         card.innerHTML = `
           <div class="card gallery-card">
             <img src="${art.imageUrl}" class="card-img-top" style="height: 200px; object-fit: cover;">
