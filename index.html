@@ -108,11 +108,26 @@
         </div>
         <div class="modal-body">
           <form id="artUploadForm">
-            <div class="mb-3"><label>Artist Name</label><input type="text" class="form-control" id="artistName" required></div>
-            <div class="mb-3"><label>X Username</label><input type="text" class="form-control" id="xUsername" placeholder="@username" required></div>
-            <div class="mb-3"><label>Discord Username</label><input type="text" class="form-control" id="discordUsername" placeholder="User#1234" required></div>
-            <div class="mb-3"><label>Upload Image</label><input type="file" class="form-control" id="artImage" accept="image/*" required></div>
-            <div class="mb-3"><label>Description</label><textarea class="form-control" id="artDescription"></textarea></div>
+            <div class="mb-3">
+              <label for="artistName" class="form-label">Artist Name</label>
+              <input type="text" class="form-control" id="artistName" required>
+            </div>
+            <div class="mb-3">
+              <label for="xUsername" class="form-label">X Username</label>
+              <input type="text" class="form-control" id="xUsername" placeholder="@username" required>
+            </div>
+            <div class="mb-3">
+              <label for="discordUsername" class="form-label">Discord Username</label>
+              <input type="text" class="form-control" id="discordUsername" placeholder="User#1234" required>
+            </div>
+            <div class="mb-3">
+              <label for="artImage" class="form-label">Upload Image</label>
+              <input type="file" class="form-control" id="artImage" accept="image/*" required>
+            </div>
+            <div class="mb-3">
+              <label for="artDescription" class="form-label">Description (Optional)</label>
+              <textarea class="form-control" id="artDescription" rows="3"></textarea>
+            </div>
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
         </div>
@@ -120,7 +135,7 @@
     </div>
   </div>
 
-  <!-- Admin Modal -->
+  <!-- Admin Login Modal -->
   <div class="modal fade" id="adminLoginModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -130,8 +145,14 @@
         </div>
         <div class="modal-body">
           <form id="adminLoginForm">
-            <div class="mb-3"><label>Email</label><input type="email" class="form-control" id="adminEmail" value="krrishmuley@gmail.com" required></div>
-            <div class="mb-3"><label>Password</label><input type="password" class="form-control" id="adminPassword" required></div>
+            <div class="mb-3">
+              <label for="adminEmail" class="form-label">Email</label>
+              <input type="email" class="form-control" id="adminEmail" value="krrishmuley@gmail.com" required>
+            </div>
+            <div class="mb-3">
+              <label for="adminPassword" class="form-label">Password</label>
+              <input type="password" class="form-control" id="adminPassword" required>
+            </div>
             <button type="submit" class="btn btn-primary">Login</button>
           </form>
         </div>
@@ -143,10 +164,10 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // Supabase Setup
+    // Supabase config
     const supabaseUrl = 'https://tovaitbkfvviyqyzguze.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvdmFpdGJrZnZ2aXlxeXpndXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MTI5MjIsImV4cCI6MjA3NDk4ODkyMn0.dUByWl_YW4uJi_iWGkUgQGcNCr3FSNda5rhC-rd5Sy8';
-    const client = supabase.createClient(supabaseUrl, supabaseKey);
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
     const adminEmail = 'krrishmuley@gmail.com';
     let isAdminLoggedIn = false;
@@ -155,29 +176,37 @@
       return str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
     }
 
-    // Load gallery on start
-    window.addEventListener('DOMContentLoaded', () => {
-      checkAdminSession();
+    // On page load
+    window.addEventListener('DOMContentLoaded', async () => {
+      await checkAdminSession();
       loadGallery();
     });
 
     async function checkAdminSession() {
-      const { data: { session } } = await client.auth.getSession();
-      if (session?.user.email === adminEmail) {
+      const { data: { session }, error } = await supabase.auth.getSession();
+      if (error) {
+        console.error('Session error:', error.message);
+        return;
+      }
+      if (session && session.user.email === adminEmail) {
         isAdminLoggedIn = true;
         document.getElementById('adminLogin').innerText = 'Admin Logout';
       }
     }
 
-    // Admin Login / Logout
+    // Admin login / logout click
     document.getElementById('adminLogin').addEventListener('click', async (e) => {
       e.preventDefault();
       if (isAdminLoggedIn) {
-        await client.auth.signOut();
+        const { error } = await supabase.auth.signOut();
+        if (error) {
+          alert('Logout failed: ' + error.message);
+          return;
+        }
         isAdminLoggedIn = false;
-        alert('Admin logged out.');
         document.getElementById('adminLogin').innerText = 'Admin Login';
         loadGallery();
+        alert('Logged out');
       } else {
         new bootstrap.Modal(document.getElementById('adminLoginModal')).show();
       }
@@ -187,108 +216,157 @@
       e.preventDefault();
       const email = document.getElementById('adminEmail').value;
       const password = document.getElementById('adminPassword').value;
-      const { data, error } = await client.auth.signInWithPassword({ email, password });
-      if (error) return alert('Login failed: ' + error.message);
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        alert('Login failed: ' + error.message);
+        return;
+      }
       if (email === adminEmail) {
         isAdminLoggedIn = true;
-        alert('Admin Logged In!');
         document.getElementById('adminLogin').innerText = 'Admin Logout';
-        bootstrap.Modal.getInstance(document.getElementById('adminLoginModal')).hide();
+        new bootstrap.Modal(document.getElementById('adminLoginModal')).hide();
         loadGallery();
+        alert('Admin logged in');
       } else {
-        alert('Only admin is allowed!');
+        alert('Only admin allowed');
       }
     });
 
-    // Upload Art
+    // Upload art
     document.getElementById('artUploadForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const artistName = document.getElementById('artistName').value;
-      const xUsername = document.getElementById('xUsername').value;
-      const discordUsername = document.getElementById('discordUsername').value;
+      const artistName = document.getElementById('artistName').value.trim();
+      const xUsername = document.getElementById('xUsername').value.trim();
+      const discordUsername = document.getElementById('discordUsername').value.trim();
       const artImage = document.getElementById('artImage').files[0];
-      const artDescription = document.getElementById('artDescription').value;
+      const artDescription = document.getElementById('artDescription').value.trim();
+
+      if (!artistName || !xUsername || !discordUsername || !artImage) {
+        alert('Please fill required fields');
+        return;
+      }
+
       const timestamp = Date.now();
       const fileName = `${timestamp}_${artImage.name}`;
 
-      const { error: uploadError } = await client.storage
+      // Upload to storage
+      const { error: uploadError } = await supabase
+        .storage
         .from('artworks')
-        .upload(fileName, artImage);
+        .upload(fileName, artImage, { upsert: true });
 
-      if (uploadError) return alert('Upload failed: ' + uploadError.message);
+      if (uploadError) {
+        alert('Upload failed: ' + uploadError.message);
+        console.error('Upload error:', uploadError);
+        return;
+      }
 
-      const { data: urlData } = client.storage.from('artworks').getPublicUrl(fileName);
+      // Get public URL
+      const { data: urlData } = supabase.storage.from('artworks').getPublicUrl(fileName);
       const imageUrl = urlData.publicUrl;
 
-      const { error: dbError } = await client
+      // Insert metadata
+      const { error: dbError } = await supabase
         .from('Artworks')
-        .insert([{
-          artistName: toTitleCase(artistName),
-          xUsername,
-          discordUsername,
-          description: artDescription,
-          imageUrl,
-          createdAt: new Date().toISOString()
-        }]);
+        .insert([
+          {
+            artistName: toTitleCase(artistName),
+            xUsername,
+            discordUsername,
+            description: artDescription,
+            imageUrl,
+            // createdAt will be auto if you set default in DB
+          }
+        ]);
 
-      if (dbError) return alert('Database error: ' + dbError.message);
+      if (dbError) {
+        alert('Database error: ' + dbError.message);
+        console.error('DB insert error:', dbError);
+        return;
+      }
 
-      alert('Artwork Uploaded!');
+      alert('Artwork uploaded successfully');
       document.getElementById('artUploadForm').reset();
       bootstrap.Modal.getInstance(document.getElementById('uploadModal')).hide();
       loadGallery();
     });
 
-    // Load Gallery
+    // Load gallery
     async function loadGallery() {
-      const container = document.getElementById('galleryContainer');
-      container.innerHTML = '<p>Loading...</p>';
+      const galleryContainer = document.getElementById('galleryContainer');
+      galleryContainer.innerHTML = '<p>Loading artworks...</p>';
 
-      const { data, error } = await client
+      const { data, error } = await supabase
         .from('Artworks')
         .select('*')
         .order('createdAt', { ascending: false });
 
-      if (error) return container.innerHTML = '<p>Error loading gallery.</p>';
-
-      if (data.length === 0) {
-        container.innerHTML = '<p>No artworks uploaded yet.</p>';
+      if (error) {
+        galleryContainer.innerHTML = `<p>Error loading: ${error.message}</p>`;
+        console.error('Gallery load error:', error);
         return;
       }
 
-      container.innerHTML = '';
-      data.forEach((art) => {
-        const card = document.createElement('div');
-        card.className = 'col-md-4 mb-4';
-        card.innerHTML = `
+      if (!data || data.length === 0) {
+        galleryContainer.innerHTML = '<p>No artworks found.</p>';
+        return;
+      }
+
+      galleryContainer.innerHTML = '';
+      data.forEach(item => {
+        const col = document.createElement('div');
+        col.className = 'col-md-4 mb-4';
+        col.innerHTML = `
           <div class="card gallery-card">
-            <img src="${art.imageUrl}" class="card-img-top" style="height: 200px; object-fit: cover;">
+            <img src="${item.imageUrl}" class="card-img-top" style="height: 200px; object-fit: cover;">
             <div class="card-body">
-              <h5>${art.artistName}</h5>
-              <p>X: ${art.xUsername}</p>
-              <p>Discord: ${art.discordUsername}</p>
-              <p>${art.description || 'No description'}</p>
-              ${isAdminLoggedIn ? `<button class="btn btn-danger btn-sm" data-id="${art.id}" data-url="${art.imageUrl}">Delete</button>` : ''}
+              <h5 class="card-title">${item.artistName}</h5>
+              <p class="card-text">X: ${item.xUsername}</p>
+              <p class="card-text">Discord: ${item.discordUsername}</p>
+              <p class="card-text">${item.description || 'No description'}</p>
+              ${isAdminLoggedIn ? `<button class="btn btn-danger btn-sm delete-btn" data-id="${item.id}" data-filename="${item.imageUrl.split('/').pop()}">Delete</button>` : ''}
             </div>
           </div>
         `;
-        container.appendChild(card);
+        galleryContainer.appendChild(col);
       });
 
-      // Delete Button
-      document.querySelectorAll('.btn-danger').forEach(btn => {
-        btn.addEventListener('click', async () => {
+      // Attach delete handlers
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
           const id = btn.getAttribute('data-id');
-          const imagePath = btn.getAttribute('data-url').split('/').pop();
+          const filename = btn.getAttribute('data-filename');
 
-          await client.from('Artworks').delete().eq('id', id);
-          await client.storage.from('artworks').remove([imagePath]);
+          // Delete DB record
+          const { error: dbErr } = await supabase
+            .from('Artworks')
+            .delete()
+            .eq('id', id);
 
-          alert('Deleted!');
+          if (dbErr) {
+            alert('Delete DB error: ' + dbErr.message);
+            console.error('DB delete error:', dbErr);
+            return;
+          }
+
+          // Delete from storage
+          const { error: storageErr } = await supabase
+            .storage
+            .from('artworks')
+            .remove([filename]);
+
+          if (storageErr) {
+            alert('Storage delete error: ' + storageErr.message);
+            console.error('Storage delete error:', storageErr);
+            return;
+          }
+
+          alert('Deleted successfully');
           loadGallery();
         });
       });
     }
+
   </script>
 </body>
 </html>
