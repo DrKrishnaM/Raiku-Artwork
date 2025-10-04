@@ -1,397 +1,413 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Raiku Art Community</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background: linear-gradient(135deg, #6e8efb, #a777e3);
-            font-family: 'Poppins', sans-serif;
-            color: #000000;
-            font-weight: bold;
-            margin: 0;
-            min-height: 100vh;
-        }
-        .navbar {
-            background-color: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
-        .navbar:hover {
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-        }
-        .navbar-brand, .nav-link, h1, h2, h5, p, label, button {
-            color: #000000 !important;
-            font-weight: bold !important;
-        }
-        .btn-primary {
-            background-color: #ff5733;
-            border-color: #ff5733;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .btn-primary:hover {
-            background-color: #c70039;
-            border-color: #c70039;
-            transform: scale(1.05);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        .btn-primary:active {
-            animation: pulse 0.3s;
-        }
-        .btn-danger {
-            transition: transform 0.2s ease;
-        }
-        .btn-danger:hover {
-            transform: scale(1.05);
-        }
-        .section {
-            padding: 50px 0;
-            animation: fadeIn 1s ease-in;
-        }
-        .gallery-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            background-color: rgba(255, 255, 255, 0.95);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .gallery-card:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-        }
-        .section.bg-light {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-            border-radius: 15px;
-            margin: 20px auto;
-            max-width: 1200px;
-        }
-        .modal-content {
-            background-color: rgba(255, 255, 255, 0.95);
-            border-radius: 10px;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-    </style>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Raiku Art Community</title>
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+ <style>
+ body {
+ background: linear-gradient(135deg, #6e8efb, #a777e3);
+ font-family: 'Poppins', sans-serif;
+ color: #000000;
+ font-weight: bold;
+ margin: 0;
+ min-height: 100vh;
+ }
+ .navbar {
+ background-color: rgba(255, 255, 255, 0.9);
+ box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+ position: sticky;
+ top: 0;
+ z-index: 1000;
+ transition: all 0.3s ease;
+ }
+ .navbar:hover {
+ box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+ }
+ .navbar-brand, .nav-link, h1, h2, h5, p, label, button {
+ color: #000000 !important;
+ font-weight: bold !important;
+ }
+ .btn-primary {
+ background-color: #ff5733;
+ border-color: #ff5733;
+ transition: transform 0.2s ease, box-shadow 0.2s ease;
+ }
+ .btn-primary:hover {
+ background-color: #c70039;
+ border-color: #c70039;
+ transform: scale(1.05);
+ box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+ }
+ .btn-primary:active {
+ animation: pulse 0.3s;
+ }
+ .btn-danger {
+ transition: transform 0.2s ease;
+ }
+ .btn-danger:hover {
+ transform: scale(1.05);
+ }
+ .section {
+ padding: 50px 0;
+ animation: fadeIn 1s ease-in;
+ }
+ .gallery-card {
+ transition: transform 0.3s ease, box-shadow 0.3s ease;
+ background-color: rgba(255, 255, 255, 0.95);
+ border-radius: 10px;
+ overflow: hidden;
+ }
+ .gallery-card:hover {
+ transform: scale(1.1);
+ box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+ }
+ .section.bg-light {
+ background: rgba(255, 255, 255, 0.1);
+ backdrop-filter: blur(5px);
+ border-radius: 15px;
+ margin: 20px auto;
+ max-width: 1200px;
+ }
+ .modal-content {
+ background-color: rgba(255, 255, 255, 0.95);
+ border-radius: 10px;
+ }
+ @keyframes fadeIn {
+ from { opacity: 0; transform: translateY(20px); }
+ to { opacity: 1; transform: translateY(0); }
+ }
+ @keyframes pulse {
+ 0% { transform: scale(1); }
+ 50% { transform: scale(1.1); }
+ 100% { transform: scale(1); }
+ }
+ </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container">
-            <a class="navbar-brand" href="#">Raiku Art</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#gallery">Gallery</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#uploadModal">Upload</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#" id="adminLogin">Admin Login</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+ <!-- Navbar -->
+ <nav class="navbar navbar-expand-lg navbar-light">
+ <div class="container">
+ <a class="navbar-brand" href="#">Raiku Art</a>
+ <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+ <span class="navbar-toggler-icon"></span>
+ </button>
+ <div class="collapse navbar-collapse" id="navbarNav">
+ <ul class="navbar-nav ms-auto">
+ <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+ <li class="nav-item"><a class="nav-link" href="#gallery">Gallery</a></li>
+ <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#uploadModal">Upload</a></li>
+ <li class="nav-item"><a class="nav-link" href="#" id="adminLogin">Admin Login</a></li>
+ </ul>
+ </div>
+ </div>
+ </nav>
 
-    <!-- Home Section -->
-    <section id="home" class="section text-center bg-light">
-        <div class="container">
-            <h1>Unleash Your Creativity!</h1>
-            <p>Join Our Vibrant Raiku Art Community To Showcase And Discover Stunning Artworks.</p>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">Upload Your Art</button>
-        </div>
-    </section>
+ <!-- Home Section -->
+ <section id="home" class="section text-center bg-light">
+ <div class="container">
+ <h1>Unleash Your Creativity!</h1>
+ <p>Join Our Vibrant Raiku Art Community To Showcase And Discover Stunning Artworks.</p>
+ <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">Upload Your Art</button>
+ </div>
+ </section>
 
-    <!-- Gallery Section -->
-    <section id="gallery" class="section bg-light">
-        <div class="container">
-            <h2>Art Gallery</h2>
-            <div class="row" id="galleryContainer"></div>
-        </div>
-    </section>
+ <!-- Gallery Section -->
+ <section id="gallery" class="section bg-light">
+ <div class="container">
+ <h2>Art Gallery</h2>
+ <div class="row" id="galleryContainer"></div>
+ </div>
+ </section>
 
-    <!-- Upload Modal -->
-    <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="uploadModalLabel">Submit Your Masterpiece</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="artUploadForm">
-                        <div class="mb-3">
-                            <label for="artistName" class="form-label">Artist Name</label>
-                            <input type="text" class="form-control" id="artistName" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="xUsername" class="form-label">X Username</label>
-                            <input type="text" class="form-control" id="xUsername" placeholder="@Username" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="discordUsername" class="form-label">Discord Username</label>
-                            <input type="text" class="form-control" id="discordUsername" placeholder="Username#1234" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="artImage" class="form-label">Upload Image</label>
-                            <input type="file" class="form-control" id="artImage" accept="image/*" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="artDescription" class="form-label">Description (Optional)</label>
-                            <textarea class="form-control" id="artDescription" rows="4"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+ <!-- Upload Modal -->
+ <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+ <div class="modal-dialog">
+ <div class="modal-content">
+ <div class="modal-header">
+ <h5 class="modal-title" id="uploadModalLabel">Submit Your Masterpiece</h5>
+ <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+ </div>
+ <div class="modal-body">
+ <form id="artUploadForm">
+ <div class="mb-3">
+ <label for="artistName" class="form-label">Artist Name</label>
+ <input type="text" class="form-control" id="artistName" required>
+ </div>
+ <div class="mb-3">
+ <label for="xUsername" class="form-label">X Username</label>
+ <input type="text" class="form-control" id="xUsername" placeholder="@Username" required>
+ </div>
+ <div class="mb-3">
+ <label for="discordUsername" class="form-label">Discord Username</label>
+ <input type="text" class="form-control" id="discordUsername" placeholder="Username#1234" required>
+ </div>
+ <div class="mb-3">
+ <label for="artImage" class="form-label">Upload Image</label>
+ <input type="file" class="form-control" id="artImage" accept="image/*" required>
+ </div>
+ <div class="mb-3">
+ <label for="artDescription" class="form-label">Description (Optional)</label>
+ <textarea class="form-control" id="artDescription" rows="4"></textarea>
+ </div>
+ <button type="submit" class="btn btn-primary">Submit</button>
+ </form>
+ </div>
+ </div>
+ </div>
+ </div>
 
-    <!-- Admin Login Modal -->
-    <div class="modal fade" id="adminLoginModal" tabindex="-1" aria-labelledby="adminLoginModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="adminLoginModalLabel">Admin Login</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="adminLoginForm">
-                        <div class="mb-3">
-                            <label for="adminEmail" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="adminEmail" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="adminPassword" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="adminPassword" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Login</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+ <!-- Admin Login Modal -->
+ <div class="modal fade" id="adminLoginModal" tabindex="-1" aria-labelledby="adminLoginModalLabel" aria-hidden="true">
+ <div class="modal-dialog">
+ <div class="modal-content">
+ <div class="modal-header">
+ <h5 class="modal-title" id="adminLoginModalLabel">Admin Login</h5>
+ <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+ </div>
+ <div class="modal-body">
+ <form id="adminLoginForm">
+ <div class="mb-3">
+ <label for="adminEmail" class="form-label">Email</label>
+ <input type="email" class="form-control" id="adminEmail" value="krrishmuley@gmail.com" required>
+ </div>
+ <div class="mb-3">
+ <label for="adminPassword" class="form-label">Password</label>
+ <input type="password" class="form-control" id="adminPassword" required>
+ </div>
+ <button type="submit" class="btn btn-primary">Login</button>
+ </form>
+ </div>
+ </div>
+ </div>
+ </div>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-        // Supabase Config
-        const supabaseUrl = 'https://tovaitbkfvviyqyzguze.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvdmFpdGJrZnZ2aXlxeXpndXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MTI5MjIsImV4cCI6MjA3NDk4ODkyMn0.dUByWl_YW4uJi_iWGkUgQGcNCr3FSNda5rhC-rd5Sy8';
-        const supabase = Supabase.createClient(supabaseUrl, supabaseKey);
+ <!-- Scripts -->
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+ <script>
+ // Supabase Config
+ const supabaseUrl = 'https://tovaitbkfvviyqyzguze.supabase.co';
+ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvdmFpdGJrZnZ2aXlxeXpndXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MTI5MjIsImV4cCI6MjA3NDk4ODkyMn0.dUByWl_YW4uJi_iWGkUgQGcNCr3FSNda5rhC-rd5Sy8';
+ const supabase = Supabase.createClient(supabaseUrl, supabaseKey);
 
-        // Utility: Capitalize first letter of each word
-        function toTitleCase(str) {
-            return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-        }
+ // Utility: Capitalize first letter of each word
+ function toTitleCase(str) {
+ return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+ }
 
-        // Admin Login Status
-        let isAdminLoggedIn = false;
-        const adminEmail = 'krrishmuley@gmail.com';
+ // Admin Login Status
+ let isAdminLoggedIn = false;
+ const adminEmail = 'krrishmuley@gmail.com';
 
-        // Check initial auth state
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            if (session && session.user.email === adminEmail) {
-                isAdminLoggedIn = true;
-                document.getElementById('adminLogin').innerText = 'Admin Logout';
-                loadGallery();
-            }
-        });
+ // Check initial auth state
+ supabase.auth.getSession().then(({ data : { session }, error }) => {
+ if (error) {
+ console.error('Error checking session:', error.message);
+ return;
+ }
+ if (session && session.user.email === adminEmail) {
+ isAdminLoggedIn = true;
+ document.getElementById('adminLogin').innerText = 'Admin Logout';
+ console.log('Admin already logged in:', session.user.email);
+ loadGallery();
+ } else {
+ console.log('No active admin session');
+ }
+ }).catch((error) => {
+ console.error('Session check failed:', error.message);
+ alert('Error Initializing Session: ' + error.message);
+ });
 
-        // Admin Login/Logout
-        document.getElementById('adminLogin').addEventListener('click', async (e) => {
-            e.preventDefault();
-            if (isAdminLoggedIn) {
-                try {
-                    const { error } = await supabase.auth.signOut();
-                    if (error) throw error;
-                    isAdminLoggedIn = false;
-                    document.getElementById('adminLogin').innerText = 'Admin Login';
-                    loadGallery();
-                    alert('Admin Logged Out.');
-                } catch (error) {
-                    console.error('Logout error:', error);
-                    alert('Logout Failed.');
-                }
-            } else {
-                console.log('Opening Admin Login Modal');
-                new bootstrap.Modal(document.getElementById('adminLoginModal')).show();
-            }
-        });
+ // Admin Login/Logout
+ document.getElementById('adminLogin').addEventListener('click', async (e) => {
+ e.preventDefault();
+ if (isAdminLoggedIn) {
+ try {
+ const { error } = await supabase.auth.signOut();
+ if (error) throw error;
+ isAdminLoggedIn = false;
+ document.getElementById('adminLogin').innerText = 'Admin Login';
+ console.log('Admin logged out');
+ loadGallery();
+ alert('Admin Logged Out.');
+ } catch (error) {
+ console.error('Logout error:', error.message);
+ alert('Logout Failed: ' + error.message);
+ }
+ } else {
+ console.log('Opening Admin Login Modal');
+ const modal = new bootstrap.Modal(document.getElementById('adminLoginModal'));
+ modal.show();
+ }
+ });
 
-        document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('adminEmail').value;
-            const password = document.getElementById('adminPassword').value;
-            console.log('Attempting login with:', email);
+ document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+ e.preventDefault();
+ const email = document.getElementById('adminEmail').value;
+ const password = document.getElementById('adminPassword').value;
+ console.log('Attempting login with:', email);
 
-            try {
-                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-                if (error) throw error;
-                if (email === adminEmail) {
-                    isAdminLoggedIn = true;
-                    alert('Admin Logged In Successfully!');
-                    document.getElementById('adminLogin').innerText = 'Admin Logout';
-                    loadGallery();
-                    bootstrap.Modal.getInstance(document.getElementById('adminLoginModal')).hide();
-                } else {
-                    alert('Only Admin Can Log In Here!');
-                }
-            } catch (error) {
-                console.error('Login error:', error.message);
-                alert('Login Failed: ' + error.message);
-            }
-        });
+ try {
+ const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+ if (error) throw error;
+ if (email === adminEmail) {
+ isAdminLoggedIn = true;
+ alert('Admin Logged In Successfully!');
+ document.getElementById('adminLogin').innerText = 'Admin Logout';
+ console.log('Admin logged in:', email);
+ loadGallery();
+ bootstrap.Modal.getInstance(document.getElementById('adminLoginModal')).hide();
+ } else {
+ alert('Only Admin Can Log In Here!');
+ console.error('Non-admin login attempt:', email);
+ }
+ } catch (error) {
+ console.error('Login error:', error.message);
+ alert('Login Failed: ' + error.message);
+ }
+ });
 
-        // Upload Functionality
-        document.getElementById('artUploadForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const artistName = document.getElementById('artistName').value;
-            const xUsername = document.getElementById('xUsername').value;
-            const discordUsername = document.getElementById('discordUsername').value;
-            const artImage = document.getElementById('artImage').files[0];
-            const artDescription = document.getElementById('artDescription').value;
+ // Upload Functionality
+ document.getElementById('artUploadForm').addEventListener('submit', async (e) => {
+ e.preventDefault();
+ 
+ const artistName = document.getElementById('artistName').value;
+ const xUsername = document.getElementById('xUsername').value;
+ const discordUsername = document.getElementById('discordUsername').value;
+ const artImage = document.getElementById('artImage').files[0];
+ const artDescription = document.getElementById('artDescription').value;
 
-            if (!artistName || !xUsername || !discordUsername || !artImage) {
-                alert('Please Fill All Required Fields!');
-                return;
-            }
+ if (!artistName || !xUsername || !discordUsername || !artImage) {
+ alert('Please Fill All Required Fields!');
+ console.error('Missing required fields:', { artistName, xUsername, discordUsername, artImage });
+ return;
+ }
 
-            try {
-                // Generate unique file name with timestamp
-                const timestamp = Date.now();
-                const fileName = `public/${timestamp}_${artImage.name}`;
-                console.log('Uploading image:', fileName);
+ try {
+ // Generate unique file name
+ const timestamp = Date.now();
+ const fileName = `public/${timestamp}_${artImage.name}`;
+ console.log('Uploading image:', fileName);
 
-                // Upload image to Supabase Storage
-                const { data: storageData, error: storageError } = await supabase.storage
-                    .from('artworks')
-                    .upload(fileName, artImage);
-                
-                if (storageError) throw storageError;
-                console.log('Image uploaded:', storageData);
+ // Upload image to Supabase Storage
+ const { data: storageData, error: storageError } = await supabase.storage
+ .from('artworks')
+ .upload(fileName, artImage, { upsert: true });
+ 
+ if (storageError) throw storageError;
+ console.log('Image uploaded:', storageData);
 
-                // Get public URL for the image
-                const { data: urlData } = supabase.storage.from('artworks').getPublicUrl(fileName);
-                const imageUrl = urlData.publicUrl;
-                console.log('Image URL:', imageUrl);
+ // Get public URL for the image
+ const { data: urlData } = supabase.storage.from('artworks').getPublicUrl(fileName);
+ const imageUrl = urlData.publicUrl;
+ console.log('Image URL:', imageUrl);
 
-                // Save metadata to Supabase Database
-                const { error: dbError } = await supabase
-                    .from('artworks')
-                    .insert([
-                        {
-                            artistName: toTitleCase(artistName),
-                            xUsername: toTitleCase(xUsername),
-                            discordUsername: toTitleCase(discordUsername),
-                            imageUrl,
-                            description: artDescription ? toTitleCase(artDescription) : ''
-                        }
-                    ]);
+ // Save metadata to Supabase Database
+ const { error: dbError } = await supabase
+ .from('Artworks')
+ .insert([
+ {
+ artistName: toTitleCase(artistName),
+ xUsername: toTitleCase(xUsername),
+ discordUsername: toTitleCase(discordUsername),
+ imageUrl,
+ description: artDescription ? toTitleCase(artDescription) : ''
+ }
+ ]);
 
-                if (dbError) throw dbError;
-                console.log('Metadata saved to database');
+ if (dbError) throw dbError;
+ console.log('Metadata saved to database');
 
-                alert('Artwork Uploaded Successfully!');
-                document.getElementById('artUploadForm').reset();
-                bootstrap.Modal.getInstance(document.getElementById('uploadModal')).hide();
-                loadGallery();
-            } catch (error) {
-                console.error('Error uploading artwork:', error.message);
-                alert('Failed To Upload Artwork: ' + error.message);
-            }
-        });
+ alert('Artwork Uploaded Successfully!');
+ document.getElementById('artUploadForm').reset();
+ bootstrap.Modal.getInstance(document.getElementById('uploadModal')).hide();
+ loadGallery();
+ } catch (error) {
+ console.error('Error uploading artwork:', error.message);
+ alert('Failed To Upload Artwork: ' + error.message);
+ }
+ });
 
-        // Load Gallery
-        async function loadGallery() {
-            const gallery = document.getElementById('galleryContainer');
-            gallery.innerHTML = '';
-            try {
-                const { data, error } = await supabase
-                    .from('artworks')
-                    .select('*')
-                    .order('createdAt', { ascending: false });
-                
-                if (error) throw error;
-                console.log('Fetched artworks:', data);
+ // Load Gallery
+ async function loadGallery() {
+ const gallery = document.getElementById('galleryContainer');
+ gallery.innerHTML = '<p>Loading Artworks...</p>';
+ try {
+ const { data, error } = await supabase
+ .from('Artworks')
+ .select('*')
+ .order('createdAt', { ascending: false });
+ 
+ if (error) throw error;
+ console.log('Fetched artworks:', data);
 
-                if (data.length === 0) {
-                    gallery.innerHTML = '<p>No Artworks Found.</p>';
-                    return;
-                }
+ gallery.innerHTML = '';
+ if (data.length === 0) {
+ gallery.innerHTML = '<p>No Artworks Found.</p>';
+ return;
+ }
 
-                data.forEach((item) => {
-                    const card = `
-                        <div class="col-md-4 mb-4">
-                            <div class="card gallery-card">
-                                <img src="${item.imageUrl}" class="card-img-top" alt="Artwork" style="height: 200px; object-fit: cover;">
-                                <div class="card-body">
-                                    <h5 class="card-title">${item.artistName}</h5>
-                                    <p class="card-text">X: ${item.xUsername}</p>
-                                    <p class="card-text">Discord: ${item.discordUsername}</p>
-                                    <p class="card-text">${item.description || 'No Description'}</p>
-                                    ${isAdminLoggedIn ? `<button class="btn btn-danger btn-sm delete-btn" data-id="${item.id}" data-image="${item.imageUrl}">Delete</button>` : ''}
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    gallery.innerHTML += card;
-                });
+ data.forEach((item) => {
+ const card = `
+ <div class="col-md-4 mb-4">
+ <div class="card gallery-card">
+ <img src="${item.imageUrl}" class="card-img-top" alt="Artwork" style="height: 200px; object-fit: cover;">
+ <div class="card-body">
+ <h5 class="card-title">${item.artistName}</h5>
+ <p class="card-text">X: ${item.xUsername}</p>
+ <p class="card-text">Discord: ${item.discordUsername}</p>
+ <p class="card-text">${item.description || 'No Description'}</p>
+ ${isAdminLoggedIn ? `<button class="btn btn-danger btn-sm delete-btn" data-id="${item.id}" data-image="${item.imageUrl}">Delete</button>` : ''}
+ </div>
+ </div>
+ </div>
+ `;
+ gallery.innerHTML += card;
+ });
 
-                // Add delete event listeners
-                document.querySelectorAll('.delete-btn').forEach((btn) => {
-                    btn.addEventListener('click', async (e) => {
-                        const id = e.target.getAttribute('data-id');
-                        const imageUrl = e.target.getAttribute('data-image');
-                        const imagePath = imageUrl.split('/').pop();
-                        console.log('Deleting artwork:', id, imagePath);
+ // Add delete event listeners
+ document.querySelectorAll('.delete-btn').forEach((btn) => {
+ btn.addEventListener('click', async (e) => {
+ const id = e.target.getAttribute('data-id');
+ const imageUrl = e.target.getAttribute('data-image');
+ const imagePath = imageUrl.split('/').pop();
+ console.log('Deleting artwork:', id, imagePath);
 
-                        try {
-                            // Delete from database
-                            const { error: dbError } = await supabase
-                                .from('artworks')
-                                .delete()
-                                .eq('id', id);
-                            if (dbError) throw dbError;
-                            console.log('Database entry deleted');
+ try {
+ // Delete from database
+ const { error: dbError } = await supabase
+ .from('Artworks')
+ .delete()
+ .eq('id', id);
+ if (dbError) throw dbError;
+ console.log('Database entry deleted');
 
-                            // Delete from storage
-                            const { error: storageError } = await supabase.storage
-                                .from('artworks')
-                                .remove([`public/${imagePath}`]);
-                            if (storageError) throw storageError;
-                            console.log('Image deleted from storage');
+ // Delete from storage
+ const { error: storageError } = await supabase.storage
+ .from('artworks')
+ .remove([`public/${imagePath}`]);
+ if (storageError) throw storageError;
+ console.log('Image deleted from storage');
 
-                            alert('Artwork Deleted Successfully!');
-                            loadGallery();
-                        } catch (error) {
-                            console.error('Error deleting artwork:', error.message);
-                            alert('Failed To Delete Artwork: ' + error.message);
-                        }
-                    });
-                });
-            } catch (error) {
-                console.error('Error fetching artworks:', error.message);
-                gallery.innerHTML = '<p>Error Loading Gallery. Please Try Again.</p>';
-            }
-        }
+ alert('Artwork Deleted Successfully!');
+ loadGallery();
+ } catch (error) {
+ console.error('Error deleting artwork:', error.message);
+ alert('Failed To Delete Artwork: ' + error.message);
+ }
+ });
+ });
+ } catch (error) {
+ console.error('Error fetching artworks:', error.message);
+ gallery.innerHTML = '<p>Error Loading Gallery. Please Try Again.</p>';
+ }
+ }
 
-        // Load gallery on page load
-        loadGallery();
-    </script>
+ // Load gallery on page load
+ loadGallery();
+ </script>
 </body>
 </html>
