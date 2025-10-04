@@ -8,7 +8,7 @@
  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
  <style>
  body {
- background: #000000;
+ background: #000000; /* Black background */
  font-family: 'Poppins', sans-serif;
  color: #ffffff;
  font-weight: bold;
@@ -28,8 +28,9 @@
  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
  }
  .navbar-brand {
- color: #ffff00 !important;
+ color: #ffff00 !important; /* Yellow Raiku */
  font-weight: bold !important;
+ font-size: 3rem !important; /* 2x font size */
  }
  .nav-link {
  color: #ffffff !important;
@@ -84,7 +85,7 @@
  }
  .gallery-card {
  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
- background-color: rgba(255, 255, 255, 0.1);
+ background-color: transparent; /* No white background */
  border-radius: 15px;
  overflow: hidden;
  opacity: 0;
@@ -97,20 +98,17 @@
  }
  .gallery-card img {
  width: 100%;
- height: 150px; /* Reduced height */
- object-fit: contain; /* Full image visible, no cropping */
+ height: 150px;
+ object-fit: contain; /* Full image visible */
  transition: transform 0.3s ease;
  }
  .gallery-card:hover img {
  transform: scale(1.1);
  }
  .section.bg-light {
- background: rgba(255, 255, 255, 0.1);
- backdrop-filter: blur(8px);
- border-radius: 20px;
+ background: transparent; /* No white background */
  margin: 20px auto;
  max-width: 1200px;
- box-shadow: 0 8px 16px rgba(255, 255, 255, 0.1);
  }
  .modal-content {
  background-color: rgba(0, 0, 0, 0.95);
@@ -122,6 +120,9 @@
  .modal.show .modal-content {
  transform: scale(1);
  opacity: 1;
+ }
+ .card-body p, .card-body h5 {
+ margin-bottom: 5px; /* Reduced gaps between elements */
  }
  @keyframes fadeIn {
  from { opacity: 0; transform: translateY(20px); }
@@ -143,6 +144,9 @@
  .btn-primary, .btn-danger {
  padding: 10px 20px;
  font-size: 14px;
+ }
+ .navbar-brand {
+ font-size: 2rem !important; /* Smaller on mobile */
  }
  }
  </style>
@@ -344,7 +348,7 @@
  container.innerHTML = '';
  data.forEach((art, index) => {
  const card = document.createElement('div');
- card.className = 'col-lg-3 col-md-6 mb-4'; /* Changed to 4 cards per row on desktop */
+ card.className = 'col-lg-3 col-md-6 mb-4';
  card.style.setProperty('--i', index);
  card.innerHTML = `
  <div class="card gallery-card">
@@ -353,7 +357,7 @@
  <h5>${art.artistName}</h5>
  <p>X: ${art.xUsername}</p>
  <p>Discord: ${art.discordUsername}</p>
- <p>${art.description || 'No description'}</p>
+ ${art.description ? `<p>${art.description}</p>` : ''}
  ${isAdminLoggedIn ? `<button class="btn btn-danger btn-sm" data-id="${art.id}" data-url="${art.imageUrl}">Delete</button>` : ''}
  </div>
  </div>
