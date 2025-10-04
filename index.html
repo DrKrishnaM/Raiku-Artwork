@@ -1,482 +1,482 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <meta charset="UTF-8" />
- <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
- <title>Raiku Art Community</title>
- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
- <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
- <style>
- body {
- background: #000000;
- font-family: 'Poppins', sans-serif;
- color: #ffffff;
- font-weight: bold;
- margin: 0;
- min-height: 100vh;
- overflow-x: hidden;
- }
- @media (min-width: 768px) {
- body {
- background: url('https://github.com/krishna077272/raiku-image/raw/main/photo_2025-10-01_18-33-44.jpg') no-repeat center center fixed;
- background-size: 70%; /* Zoomed out further for better visibility */
- }
- }
- .navbar {
- background: transparent;
- box-shadow: none;
- position: sticky;
- top: 0;
- z-index: 1000;
- transition: all 0.3s ease;
- }
- .navbar:hover {
- box-shadow: 0 6px 20px rgba(255, 255, 255, 0.1);
- }
- .navbar-brand {
- color: #ffff00 !important;
- font-weight: bold !important;
- font-size: 3rem !important;
- }
- .nav-link {
- color: #ffffff !important;
- font-weight: bold !important;
- position: relative;
- transition: color 0.3s ease;
- }
- .nav-link::after {
- content: '';
- position: absolute;
- width: 0;
- height: 2px;
- bottom: 0;
- left: 0;
- background-color: #ffff00;
- transition: width 0.3s ease;
- }
- .nav-link:hover::after {
- width: 100%;
- }
- h1, h2, h5, p, label, button {
- color: #ffffff !important;
- font-weight: bold !important;
- }
- .btn-primary {
- background: linear-gradient(45deg, #ff00ff, #00ffff);
- border: none;
- border-radius: 25px;
- transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.5s ease;
- position: relative;
- overflow: hidden;
- padding: 15px 30px; /* 1.5x size */
- font-size: 1.5rem; /* 1.5x font size */
- }
- .btn-primary::before {
- content: '';
- position: absolute;
- top: 0;
- left: -100%;
- width: 100%;
- height: 100%;
- background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
- transition: left 0.5s ease;
- }
- .btn-primary:hover::before {
- left: 100%;
- }
- .btn-primary:hover {
- background: linear-gradient(45deg, #e600e6, #00b7eb);
- transform: scale(1.1);
- box-shadow: 0 6px 12px rgba(255, 255, 255, 0.3);
- }
- .btn-primary:active {
- animation: pulse 0.3s;
- }
- .btn-danger {
- background: linear-gradient(45deg, #dc3545, #b02a37);
- border: none;
- border-radius: 25px;
- transition: transform 0.3s ease;
- }
- .btn-danger:hover {
- transform: scale(1.1);
- box-shadow: 0 6px 12px rgba(255, 255, 255, 0.3);
- }
- .section {
- padding: 50px 0;
- background: transparent;
- animation: fadeIn 1s ease-in;
- }
- .container {
- background: transparent;
- }
- .card {
- background: transparent;
- border: none;
- }
- .gallery-card {
- transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
- background: transparent;
- border-radius: 15px;
- overflow: hidden;
- opacity: 0;
- animation: cardFadeIn 0.5s ease forwards;
- animation-delay: calc(var(--i) * 0.1s);
- text-align: center;
- }
- .gallery-card:hover {
- transform: translateY(-10px);
- box-shadow: 0 12px 24px rgba(255, 255, 255, 0.2);
- }
- .gallery-card img {
- width: 100%;
- height: 150px;
- object-fit: contain;
- transition: transform 0.3s ease;
- }
- .gallery-card:hover img {
- transform: scale(1.1);
- }
- .modal-content {
- background: #000000;
- border-radius: 15px;
- transform: scale(0.7);
- opacity: 0;
- transition: all 0.3s ease;
- }
- .modal.show .modal-content {
- transform: scale(1);
- opacity: 1;
- }
- .form-control {
- background: #333333;
- color: #ffffff;
- border: none;
- }
- .form-control::placeholder {
- color: #cccccc;
- }
- .btn-close {
- filter: invert(1);
- }
- .card-body p, .card-body h5 {
- margin-bottom: 5px;
- }
- /* Success Modal */
- .success-modal .modal-content {
- background: linear-gradient(45deg, #ff00ff, #00ffff);
- border: none;
- text-align: center;
- padding: 20px;
- }
- .success-modal .modal-body {
- position: relative;
- overflow: hidden;
- }
- .success-modal .modal-body::before {
- content: '✔';
- font-size: 50px;
- color: #ffffff;
- display: block;
- margin-bottom: 10px;
- animation: checkmark 0.5s ease-in-out;
- }
- .success-modal .modal-body::after {
- content: '';
- position: absolute;
- top: 0;
- left: 0;
- width: 100%;
- height: 100%;
- background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="10" cy="10" r="5" fill="white"/><circle cx="30" cy="30" r="5" fill="white"/><circle cx="50" cy="10" r="5" fill="white"/></svg>') repeat;
- opacity: 0.3;
- animation: confetti 2s ease infinite;
- }
- .success-modal .btn-primary {
- background: #000000;
- color: #ffffff;
- padding: 15px 30px; /* 1.5x size */
- font-size: 1.5rem; /* 1.5x font size */
- }
- @keyframes checkmark {
- 0% { transform: scale(0); opacity: 0; }
- 100% { transform: scale(1); opacity: 1; }
- }
- @keyframes confetti {
- 0% { background-position: 0 0; }
- 100% { background-position: 100px 100px; }
- }
- @keyframes fadeIn {
- from { opacity: 0; transform: translateY(20px); }
- to { opacity: 1; transform: translateY(0); }
- }
- @keyframes cardFadeIn {
- from { opacity: 0; transform: translateY(20px); }
- to { opacity: 1; transform: translateY(0); }
- }
- @keyframes pulse {
- 0% { transform: scale(1); }
- 50% { transform: scale(1.15); }
- 100% { transform: scale(1); }
- }
- @media (max-width: 768px) {
- .gallery-card {
- margin-bottom: 20px;
- }
- .btn-primary, .btn-danger {
- padding: 10px 20px; /* Keep mobile button size smaller */
- font-size: 1rem; /* Keep mobile font size smaller */
- }
- .navbar-brand {
- font-size: 2rem !important;
- }
- }
- </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Raiku Art Community</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #000000;
+      font-family: 'Poppins', sans-serif;
+      color: #ffffff;
+      font-weight: bold;
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    @media (min-width: 768px) {
+      body {
+        background: url('https://github.com/krishna077272/raiku-image/raw/main/photo_2025-10-01_18-33-44.jpg') no-repeat center center fixed;
+        background-size: cover; /* Reverted to original size */
+      }
+    }
+    .navbar {
+      background: transparent;
+      box-shadow: none;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+    .navbar:hover {
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.1);
+    }
+    .navbar-brand {
+      color: #ffff00 !important;
+      font-weight: bold !important;
+      font-size: 3rem !important;
+    }
+    .nav-link {
+      color: #ffffff !important;
+      font-weight: bold !important;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background-color: #ffff00;
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    h1, h2, h5, p, label, button {
+      color: #ffffff !important;
+      font-weight: bold !important;
+    }
+    .btn-primary {
+      background: linear-gradient(45deg, #ff00ff, #00ffff);
+      border: none;
+      border-radius: 25px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.5s ease;
+      position: relative;
+      overflow: hidden;
+      padding: 12px 24px; /* 1.2x size (original: 10px 20px) */
+      font-size: 1.2rem; /* 1.2x font size (original: 1rem) */
+    }
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transition: left 0.5s ease;
+    }
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(45deg, #e600e6, #00b7eb);
+      transform: scale(1.1);
+      box-shadow: 0 6px 12px rgba(255, 255, 255, 0.3);
+    }
+    .btn-primary:active {
+      animation: pulse 0.3s;
+    }
+    .btn-danger {
+      background: linear-gradient(45deg, #dc3545, #b02a37);
+      border: none;
+      border-radius: 25px;
+      transition: transform 0.3s ease;
+    }
+    .btn-danger:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 12px rgba(255, 255, 255, 0.3);
+    }
+    .section {
+      padding: 50px 0;
+      background: transparent;
+      animation: fadeIn 1s ease-in;
+    }
+    .container {
+      background: transparent;
+    }
+    .card {
+      background: transparent;
+      border: none;
+    }
+    .gallery-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
+      background: transparent;
+      border-radius: 15px;
+      overflow: hidden;
+      opacity: 0;
+      animation: cardFadeIn 0.5s ease forwards;
+      animation-delay: calc(var(--i) * 0.1s);
+      text-align: center;
+    }
+    .gallery-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 12px 24px rgba(255, 255, 255, 0.2);
+    }
+    .gallery-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: contain;
+      transition: transform 0.3s ease;
+    }
+    .gallery-card:hover img {
+      transform: scale(1.1);
+    }
+    .modal-content {
+      background: #000000;
+      border-radius: 15px;
+      transform: scale(0.7);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .modal.show .modal-content {
+      transform: scale(1);
+      opacity: 1;
+    }
+    .form-control {
+      background: #333333;
+      color: #ffffff;
+      border: none;
+    }
+    .form-control::placeholder {
+      color: #cccccc;
+    }
+    .btn-close {
+      filter: invert(1);
+    }
+    .card-body p, .card-body h5 {
+      margin-bottom: 5px;
+    }
+    /* Success Modal */
+    .success-modal .modal-content {
+      background: linear-gradient(45deg, #ff00ff, #00ffff);
+      border: none;
+      text-align: center;
+      padding: 20px;
+    }
+    .success-modal .modal-body {
+      position: relative;
+      overflow: hidden;
+    }
+    .success-modal .modal-body::before {
+      content: '✔';
+      font-size: 50px;
+      color: #ffffff;
+      display: block;
+      margin-bottom: 10px;
+      animation: checkmark 0.5s ease-in-out;
+    }
+    .success-modal .modal-body::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="10" cy="10" r="5" fill="white"/><circle cx="30" cy="30" r="5" fill="white"/><circle cx="50" cy="10" r="5" fill="white"/></svg>') repeat;
+      opacity: 0.3;
+      animation: confetti 2s ease infinite;
+    }
+    .success-modal .btn-primary {
+      background: #000000;
+      color: #ffffff;
+      padding: 12px 24px; /* 1.2x size */
+      font-size: 1.2rem; /* 1.2x font size */
+    }
+    @keyframes checkmark {
+      0% { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes confetti {
+      0% { background-position: 0 0; }
+      100% { background-position: 100px 100px; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes cardFadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+      100% { transform: scale(1); }
+    }
+    @media (max-width: 768px) {
+      .gallery-card {
+        margin-bottom: 20px;
+      }
+      .btn-primary, .btn-danger {
+        padding: 10px 20px; /* Keep mobile button size smaller */
+        font-size: 1rem; /* Keep mobile font size smaller */
+      }
+      .navbar-brand {
+        font-size: 2rem !important;
+      }
+    }
+  </style>
 </head>
 <body>
- <!-- Navbar -->
- <nav class="navbar navbar-expand-lg navbar-light">
- <div class="container">
- <a class="navbar-brand" href="#">Raiku Art</a>
- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
- <span class="navbar-toggler-icon"></span>
- </button>
- <div class="collapse navbar-collapse" id="navbarNav">
- <ul class="navbar-nav ms-auto">
- <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
- <li class="nav-item"><a class="nav-link" href="#gallery">Gallery</a></li>
- <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#uploadModal">Upload</a></li>
- <li class="nav-item"><a class="nav-link" href="#" id="adminLogin">Admin Login</a></li>
- </ul>
- </div>
- </div>
- </nav>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+      <a class="navbar-brand" href="#">Raiku Art</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#gallery">Gallery</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#uploadModal">Upload</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" id="adminLogin">Admin Login</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
- <!-- Home Section -->
- <section id="home" class="section text-center">
- <div class="container">
- <h1>Unleash Your Creativity!</h1>
- <p>Join Our Vibrant Raiku Art Community To Showcase And Discover Stunning Artworks.</p>
- <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">Upload Your Art</button>
- </div>
- </section>
+  <!-- Home Section -->
+  <section id="home" class="section text-center">
+    <div class="container">
+      <h1>Unleash Your Creativity!</h1>
+      <p>Join Our Vibrant Raiku Art Community To Showcase And Discover Stunning Artworks.</p>
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">Upload Your Art</button>
+    </div>
+  </section>
 
- <!-- Gallery Section -->
- <section id="gallery" class="section">
- <div class="container">
- <h2>Art Gallery</h2>
- <div class="row" id="galleryContainer"></div>
- </div>
- </section>
+  <!-- Gallery Section -->
+  <section id="gallery" class="section">
+    <div class="container">
+      <h2>Art Gallery</h2>
+      <div class="row" id="galleryContainer"></div>
+    </div>
+  </section>
 
- <!-- Upload Modal -->
- <div class="modal fade" id="uploadModal" tabindex="-1">
- <div class="modal-dialog">
- <div class="modal-content">
- <div class="modal-header">
- <h5 class="modal-title">Submit Your Masterpiece</h5>
- <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
- </div>
- <div class="modal-body">
- <form id="artUploadForm">
- <div class="mb-3"><label>Artist Name</label><input type="text" class="form-control" id="artistName" required></div>
- <div class="mb-3"><label>X Username</label><input type="text" class="form-control" id="xUsername" placeholder="@username" required></div>
- <div class="mb-3"><label>Discord Username</label><input type="text" class="form-control" id="discordUsername" placeholder="User#1234" required></div>
- <div class="mb-3"><label>Upload Image</label><input type="file" class="form-control" id="artImage" accept="image/*" required></div>
- <div class="mb-3"><label>Description</label><textarea class="form-control" id="artDescription"></textarea></div>
- <button type="submit" class="btn btn-primary">Submit</button>
- </form>
- </div>
- </div>
- </div>
- </div>
+  <!-- Upload Modal -->
+  <div class="modal fade" id="uploadModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Submit Your Masterpiece</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="artUploadForm">
+            <div class="mb-3"><label>Artist Name</label><input type="text" class="form-control" id="artistName" required></div>
+            <div class="mb-3"><label>X Username</label><input type="text" class="form-control" id="xUsername" placeholder="@username" required></div>
+            <div class="mb-3"><label>Discord Username</label><input type="text" class="form-control" id="discordUsername" placeholder="User#1234" required></div>
+            <div class="mb-3"><label>Upload Image</label><input type="file" class="form-control" id="artImage" accept="image/*" required></div>
+            <div class="mb-3"><label>Description</label><textarea class="form-control" id="artDescription"></textarea></div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
- <!-- Success Modal -->
- <div class="modal fade success-modal" id="successModal" tabindex="-1">
- <div class="modal-dialog modal-sm">
- <div class="modal-content">
- <div class="modal-body">
- <p>Boom! Your Art is Live! 🎨</p>
- <button class="btn btn-primary" onclick="window.location.href='#gallery'">Check It Out</button>
- </div>
- </div>
- </div>
- </div>
+  <!-- Success Modal -->
+  <div class="modal fade success-modal" id="successModal" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-body">
+          <p>Boom! Your Art is Live! 🎨</p>
+          <button class="btn btn-primary" onclick="window.location.href='#gallery'">Check It Out</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
- <!-- Admin Modal -->
- <div class="modal fade" id="adminLoginModal" tabindex="-1">
- <div class="modal-dialog">
- <div class="modal-content">
- <div class="modal-header">
- <h5 class="modal-title">Admin Login</h5>
- <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
- </div>
- <div class="modal-body">
- <form id="adminLoginForm">
- <div class="mb-3"><label>Email</label><input type="email" class="form-control" id="adminEmail" value="krrishmuley@gmail.com" required></div>
- <div class="mb-3"><label>Password</label><input type="password" class="form-control" id="adminPassword" required></div>
- <button type="submit" class="btn btn-primary">Login</button>
- </form>
- </div>
- </div>
- </div>
- </div>
+  <!-- Admin Modal -->
+  <div class="modal fade" id="adminLoginModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Admin Login</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="adminLoginForm">
+            <div class="mb-3"><label>Email</label><input type="email" class="form-control" id="adminEmail" value="krrishmuley@gmail.com" required></div>
+            <div class="mb-3"><label>Password</label><input type="password" class="form-control" id="adminPassword" required></div>
+            <button type="submit" class="btn btn-primary">Login</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
- <!-- Scripts -->
- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
- <script>
- // Supabase Setup
- const supabaseUrl = 'https://tovaitbkfvviyqyzguze.supabase.co';
- const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvdmFpdGJrZnZ2aXlxeXpndXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MTI5MjIsImV4cCI6MjA3NDk4ODkyMn0.dUByWl_YW4uJi_iWGkUgQGcNCr3FSNda5rhC-rd5Sy8';
- const client = supabase.createClient(supabaseUrl, supabaseKey);
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Supabase Setup
+    const supabaseUrl = 'https://tovaitbkfvviyqyzguze.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvdmFpdGJrZnZ2aXlxeXpndXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MTI5MjIsImV4cCI6MjA3NDk4ODkyMn0.dUByWl_YW4uJi_iWGkUgQGcNCr3FSNda5rhC-rd5Sy8';
+    const client = supabase.createClient(supabaseUrl, supabaseKey);
 
- const adminEmail = 'krrishmuley@gmail.com';
- let isAdminLoggedIn = false;
+    const adminEmail = 'krrishmuley@gmail.com';
+    let isAdminLoggedIn = false;
 
- function toTitleCase(str) {
- return str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
- }
+    function toTitleCase(str) {
+      return str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+    }
 
- // Load gallery on start
- window.addEventListener('DOMContentLoaded', () => {
- checkAdminSession();
- loadGallery();
- });
+    // Load gallery on start
+    window.addEventListener('DOMContentLoaded', () => {
+      checkAdminSession();
+      loadGallery();
+    });
 
- async function checkAdminSession() {
- const { data: { session } } = await client.auth.getSession();
- if (session?.user.email === adminEmail) {
- isAdminLoggedIn = true;
- document.getElementById('adminLogin').innerText = 'Admin Logout';
- }
- }
+    async function checkAdminSession() {
+      const { data: { session } } = await client.auth.getSession();
+      if (session?.user.email === adminEmail) {
+        isAdminLoggedIn = true;
+        document.getElementById('adminLogin').innerText = 'Admin Logout';
+      }
+    }
 
- // Admin Login / Logout
- document.getElementById('adminLogin').addEventListener('click', async (e) => {
- e.preventDefault();
- if (isAdminLoggedIn) {
- await client.auth.signOut();
- isAdminLoggedIn = false;
- alert('Admin logged out.');
- document.getElementById('adminLogin').innerText = 'Admin Login';
- loadGallery();
- } else {
- new bootstrap.Modal(document.getElementById('adminLoginModal')).show();
- }
- });
+    // Admin Login / Logout
+    document.getElementById('adminLogin').addEventListener('click', async (e) => {
+      e.preventDefault();
+      if (isAdminLoggedIn) {
+        await client.auth.signOut();
+        isAdminLoggedIn = false;
+        alert('Admin logged out.');
+        document.getElementById('adminLogin').innerText = 'Admin Login';
+        loadGallery();
+      } else {
+        new bootstrap.Modal(document.getElementById('adminLoginModal')).show();
+      }
+    });
 
- document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
- e.preventDefault();
- const email = document.getElementById('adminEmail').value;
- const password = document.getElementById('adminPassword').value;
- const { data, error } = await client.auth.signInWithPassword({ email, password });
- if (error) return alert('Login failed: ' + error.message);
- if (email === adminEmail) {
- isAdminLoggedIn = true;
- alert('Admin Logged In!');
- document.getElementById('adminLogin').innerText = 'Admin Logout';
- bootstrap.Modal.getInstance(document.getElementById('adminLoginModal')).hide();
- loadGallery();
- } else {
- alert('Only admin is allowed!');
- }
- });
+    document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('adminEmail').value;
+      const password = document.getElementById('adminPassword').value;
+      const { data, error } = await client.auth.signInWithPassword({ email, password });
+      if (error) return alert('Login failed: ' + error.message);
+      if (email === adminEmail) {
+        isAdminLoggedIn = true;
+        alert('Admin Logged In!');
+        document.getElementById('adminLogin').innerText = 'Admin Logout';
+        bootstrap.Modal.getInstance(document.getElementById('adminLoginModal')).hide();
+        loadGallery();
+      } else {
+        alert('Only admin is allowed!');
+      }
+    });
 
- // Upload Art
- document.getElementById('artUploadForm').addEventListener('submit', async (e) => {
- e.preventDefault();
- const artistName = document.getElementById('artistName').value;
- const xUsername = document.getElementById('xUsername').value;
- const discordUsername = document.getElementById('discordUsername').value;
- const artImage = document.getElementById('artImage').files[0];
- const artDescription = document.getElementById('artDescription').value;
- const timestamp = Date.now();
- const fileName = `${timestamp}_${artImage.name}`;
+    // Upload Art
+    document.getElementById('artUploadForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const artistName = document.getElementById('artistName').value;
+      const xUsername = document.getElementById('xUsername').value;
+      const discordUsername = document.getElementById('discordUsername').value;
+      const artImage = document.getElementById('artImage').files[0];
+      const artDescription = document.getElementById('artDescription').value;
+      const timestamp = Date.now();
+      const fileName = `${timestamp}_${artImage.name}`;
 
- const { error: uploadError } = await client.storage
- .from('artworks')
- .upload(fileName, artImage);
+      const { error: uploadError } = await client.storage
+        .from('artworks')
+        .upload(fileName, artImage);
 
- if (uploadError) return alert('Upload failed: ' + uploadError.message);
+      if (uploadError) return alert('Upload failed: ' + uploadError.message);
 
- const { data: urlData } = client.storage.from('artworks ').getPublicUrl(fileName);
- const imageUrl = urlData.publicUrl;
+      const { data: urlData } = client.storage.from('artworks').getPublicUrl(fileName);
+      const imageUrl = urlData.publicUrl;
 
- const { error: dbError } = await client
- .from('Artworks')
- .insert([{
- artistName: toTitleCase(artistName),
- xUsername,
- discordUsername,
- description: artDescription,
- imageUrl,
- createdAt: new Date().toISOString()
- }]);
+      const { error: dbError } = await client
+        .from('Artworks')
+        .insert([{
+          artistName: toTitleCase(artistName),
+          xUsername,
+          discordUsername,
+          description: artDescription,
+          imageUrl,
+          createdAt: new Date().toISOString()
+        }]);
 
- if (dbError) return alert('Database error: ' + dbError.message);
+      if (dbError) return alert('Database error: ' + dbError.message);
 
- // Show success modal
- const successModal = new bootstrap.Modal(document.getElementById('successModal'));
- successModal.show();
- setTimeout(() => successModal.hide(), 3000);
+      // Show success modal
+      const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+      successModal.show();
+      setTimeout(() => successModal.hide(), 3000);
 
- document.getElementById('artUploadForm').reset();
- bootstrap.Modal.getInstance(document.getElementById('uploadModal')).hide();
- loadGallery();
- });
+      document.getElementById('artUploadForm').reset();
+      bootstrap.Modal.getInstance(document.getElementById('uploadModal')).hide();
+      loadGallery();
+    });
 
- // Load Gallery
- async function loadGallery() {
- const container = document.getElementById('galleryContainer');
- container.innerHTML = '<p>Loading...</p>';
+    // Load Gallery
+    async function loadGallery() {
+      const container = document.getElementById('galleryContainer');
+      container.innerHTML = '<p>Loading...</p>';
 
- const { data, error } = await client
- .from('Artworks')
- .select('*')
- .order('createdAt', { ascending: false });
+      const { data, error } = await client
+        .from('Artworks')
+        .select('*')
+        .order('createdAt', { ascending: false });
 
- if (error) return container.innerHTML = '<p>Error loading gallery.</p>';
+      if (error) return container.innerHTML = '<p>Error loading gallery.</p>';
 
- if (data.length === 0) {
- container.innerHTML = '<p>No artworks uploaded yet.</p>';
- return;
- }
+      if (data.length === 0) {
+        container.innerHTML = '<p>No artworks uploaded yet.</p>';
+        return;
+      }
 
- container.innerHTML = '';
- data.forEach((art, index) => {
- const card = document.createElement('div');
- card.className = 'col-lg-3 col-md-6 col-sm-6 mb-4';
- card.style.setProperty('--i', index);
- card.innerHTML = `
- <div class="card gallery-card">
- <img src="${art.imageUrl}" class="card-img-top" style="height: 150px; object-fit: contain;">
- <div class="card-body">
- <h5>${art.artistName}</h5>
- <p>X: ${art.xUsername}</p>
- <p>Discord: ${art.discordUsername}</p>
- ${art.description ? `<p>${art.description}</p>` : ''}
- ${isAdminLoggedIn ? `<button class="btn btn-danger btn-sm" data-id="${art.id}" data-url="${art.imageUrl}">Delete</button>` : ''}
- </div>
- </div>
- `;
- container.appendChild(card);
- });
+      container.innerHTML = '';
+      data.forEach((art, index) => {
+        const card = document.createElement('div');
+        card.className = 'col-lg-3 col-md-6 col-sm-6 mb-4';
+        card.style.setProperty('--i', index);
+        card.innerHTML = `
+          <div class="card gallery-card">
+            <img src="${art.imageUrl}" class="card-img-top" style="height: 150px; object-fit: contain;">
+            <div class="card-body">
+              <h5>${art.artistName}</h5>
+              <p>X: ${art.xUsername}</p>
+              <p>Discord: ${art.discordUsername}</p>
+              ${art.description ? `<p>${art.description}</p>` : ''}
+              ${isAdminLoggedIn ? `<button class="btn btn-danger btn-sm" data-id="${art.id}" data-url="${art.imageUrl}">Delete</button>` : ''}
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
 
- // Delete Button
- document.querySelectorAll('.btn-danger').forEach(btn => {
- btn.addEventListener('click', async () => {
- const id = btn.getAttribute('data-id');
- const imagePath = btn.getAttribute('data-url').split('/').pop();
+      // Delete Button
+      document.querySelectorAll('.btn-danger').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = btn.getAttribute('data-id');
+          const imagePath = btn.getAttribute('data-url').split('/').pop();
 
- await client.from('Artworks').delete().eq('id', id);
- await client.storage.from('artworks').remove([imagePath]);
+          await client.from('Artworks').delete().eq('id', id);
+          await client.storage.from('artworks').remove([imagePath]);
 
- alert('Deleted!');
- loadGallery();
- });
- });
- }
- </script>
+          alert('Deleted!');
+          loadGallery();
+        });
+      });
+    }
+  </script>
 </body>
 </html>
