@@ -8,10 +8,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, #6e8efb, #a777e3); /* Artsy gradient */
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
             font-family: 'Poppins', sans-serif;
-            color: #000000; /* Black text */
-            font-weight: bold; /* Bold text */
+            color: #000000;
+            font-weight: bold;
             margin: 0;
             min-height: 100vh;
         }
@@ -27,8 +27,8 @@
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
         }
         .navbar-brand, .nav-link, h1, h2, h5, p, label, button {
-            color: #000000 !important; /* Black text for all */
-            font-weight: bold !important; /* Bold text */
+            color: #000000 !important;
+            font-weight: bold !important;
         }
         .btn-primary {
             background-color: #ff5733;
@@ -75,7 +75,6 @@
             background-color: rgba(255, 255, 255, 0.95);
             border-radius: 10px;
         }
-        /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -203,17 +202,32 @@
         let isAdminLoggedIn = false;
         const adminEmail = 'krrishmuley@gmail.com';
 
-        // Admin Login
-        document.getElementById('adminLogin').addEventListener('click', (e) => {
+        // Check initial auth state
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            if (session && session.user.email === adminEmail) {
+                isAdminLoggedIn = true;
+                document.getElementById('adminLogin').innerText = 'Admin Logout';
+                loadGallery();
+            }
+        });
+
+        // Admin Login/Logout
+        document.getElementById('adminLogin').addEventListener('click', async (e) => {
             e.preventDefault();
             if (isAdminLoggedIn) {
-                supabase.auth.signOut().then(() => {
+                try {
+                    const { error } = await supabase.auth.signOut();
+                    if (error) throw error;
                     isAdminLoggedIn = false;
                     document.getElementById('adminLogin').innerText = 'Admin Login';
                     loadGallery();
                     alert('Admin Logged Out.');
-                });
+                } catch (error) {
+                    console.error('Logout error:', error);
+                    alert('Logout Failed.');
+                }
             } else {
+                console.log('Opening Admin Login Modal');
                 new bootstrap.Modal(document.getElementById('adminLoginModal')).show();
             }
         });
@@ -222,9 +236,10 @@
             e.preventDefault();
             const email = document.getElementById('adminEmail').value;
             const password = document.getElementById('adminPassword').value;
+            console.log('Attempting login with:', email);
 
             try {
-                const { error } = await supabase.auth.signInWithPassword({ email, password });
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
                 if (error) throw error;
                 if (email === adminEmail) {
                     isAdminLoggedIn = true;
@@ -236,8 +251,8 @@
                     alert('Only Admin Can Log In Here!');
                 }
             } catch (error) {
-                console.error('Login error:', error);
-                alert('Login Failed. Please Check Credentials.');
+                console.error('Login error:', error.message);
+                alert('Login Failed: ' + error.message);
             }
         });
 
@@ -257,16 +272,23 @@
             }
 
             try {
+                // Generate unique file name with timestamp
+                const timestamp = Date.now();
+                const fileName = `public/${timestamp}_${artImage.name}`;
+                console.log('Uploading image:', fileName);
+
                 // Upload image to Supabase Storage
                 const { data: storageData, error: storageError } = await supabase.storage
                     .from('artworks')
-                    .upload(`public/${artImage.name}`, artImage);
+                    .upload(fileName, artImage);
                 
                 if (storageError) throw storageError;
+                console.log('Image uploaded:', storageData);
 
                 // Get public URL for the image
-                const { data: urlData } = supabase.storage.from('artworks').getPublicUrl(`public/${artImage.name}`);
+                const { data: urlData } = supabase.storage.from('artworks').getPublicUrl(fileName);
                 const imageUrl = urlData.publicUrl;
+                console.log('Image URL:', imageUrl);
 
                 // Save metadata to Supabase Database
                 const { error: dbError } = await supabase
@@ -282,14 +304,15 @@
                     ]);
 
                 if (dbError) throw dbError;
+                console.log('Metadata saved to database');
 
                 alert('Artwork Uploaded Successfully!');
                 document.getElementById('artUploadForm').reset();
                 bootstrap.Modal.getInstance(document.getElementById('uploadModal')).hide();
                 loadGallery();
             } catch (error) {
-                console.error('Error uploading artwork:', error);
-                alert('Failed To Upload Artwork. Please Try Again.');
+                console.error('Error uploading artwork:', error.message);
+                alert('Failed To Upload Artwork: ' + error.message);
             }
         });
 
@@ -297,63 +320,74 @@
         async function loadGallery() {
             const gallery = document.getElementById('galleryContainer');
             gallery.innerHTML = '';
-            const { data, error } = await supabase
-                .from('artworks')
-                .select('*')
-                .order('createdAt', { ascending: false });
+            try {
+                const { data, error } = await supabase
+                    .from('artworks')
+                    .select('*')
+                    .order('createdAt', { ascending: false });
+                
+                if (error) throw error;
+                console.log('Fetched artworks:', data);
 
-            if (error) {
-                console.error('Error fetching artworks:', error);
-                return;
-            }
+                if (data.length === 0) {
+                    gallery.innerHTML = '<p>No Artworks Found.</p>';
+                    return;
+                }
 
-            data.forEach((item) => {
-                const card = `
-                    <div class="col-md-4 mb-4">
-                        <div class="card gallery-card">
-                            <img src="${item.imageUrl}" class="card-img-top" alt="Artwork" style="height: 200px; object-fit: cover;">
-                            <div class="card-body">
-                                <h5 class="card-title">${item.artistName}</h5>
-                                <p class="card-text">X: ${item.xUsername}</p>
-                                <p class="card-text">Discord: ${item.discordUsername}</p>
-                                <p class="card-text">${item.description || 'No Description'}</p>
-                                ${isAdminLoggedIn ? `<button class="btn btn-danger btn-sm delete-btn" data-id="${item.id}" data-image="${item.imageUrl}">Delete</button>` : ''}
+                data.forEach((item) => {
+                    const card = `
+                        <div class="col-md-4 mb-4">
+                            <div class="card gallery-card">
+                                <img src="${item.imageUrl}" class="card-img-top" alt="Artwork" style="height: 200px; object-fit: cover;">
+                                <div class="card-body">
+                                    <h5 class="card-title">${item.artistName}</h5>
+                                    <p class="card-text">X: ${item.xUsername}</p>
+                                    <p class="card-text">Discord: ${item.discordUsername}</p>
+                                    <p class="card-text">${item.description || 'No Description'}</p>
+                                    ${isAdminLoggedIn ? `<button class="btn btn-danger btn-sm delete-btn" data-id="${item.id}" data-image="${item.imageUrl}">Delete</button>` : ''}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
-                gallery.innerHTML += card;
-            });
-
-            // Add delete event listeners
-            document.querySelectorAll('.delete-btn').forEach((btn) => {
-                btn.addEventListener('click', async (e) => {
-                    const id = e.target.getAttribute('data-id');
-                    const imageUrl = e.target.getAttribute('data-image');
-                    const imagePath = imageUrl.split('/').pop();
-
-                    try {
-                        // Delete from database
-                        const { error: dbError } = await supabase
-                            .from('artworks')
-                            .delete()
-                            .eq('id', id);
-                        if (dbError) throw dbError;
-
-                        // Delete from storage
-                        const { error: storageError } = await supabase.storage
-                            .from('artworks')
-                            .remove([`public/${imagePath}`]);
-                        if (storageError) throw storageError;
-
-                        alert('Artwork Deleted Successfully!');
-                        loadGallery();
-                    } catch (error) {
-                        console.error('Error deleting artwork:', error);
-                        alert('Failed To Delete Artwork. Please Try Again.');
-                    }
+                    `;
+                    gallery.innerHTML += card;
                 });
-            });
+
+                // Add delete event listeners
+                document.querySelectorAll('.delete-btn').forEach((btn) => {
+                    btn.addEventListener('click', async (e) => {
+                        const id = e.target.getAttribute('data-id');
+                        const imageUrl = e.target.getAttribute('data-image');
+                        const imagePath = imageUrl.split('/').pop();
+                        console.log('Deleting artwork:', id, imagePath);
+
+                        try {
+                            // Delete from database
+                            const { error: dbError } = await supabase
+                                .from('artworks')
+                                .delete()
+                                .eq('id', id);
+                            if (dbError) throw dbError;
+                            console.log('Database entry deleted');
+
+                            // Delete from storage
+                            const { error: storageError } = await supabase.storage
+                                .from('artworks')
+                                .remove([`public/${imagePath}`]);
+                            if (storageError) throw storageError;
+                            console.log('Image deleted from storage');
+
+                            alert('Artwork Deleted Successfully!');
+                            loadGallery();
+                        } catch (error) {
+                            console.error('Error deleting artwork:', error.message);
+                            alert('Failed To Delete Artwork: ' + error.message);
+                        }
+                    });
+                });
+            } catch (error) {
+                console.error('Error fetching artworks:', error.message);
+                gallery.innerHTML = '<p>Error Loading Gallery. Please Try Again.</p>';
+            }
         }
 
         // Load gallery on page load
