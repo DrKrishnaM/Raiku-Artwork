@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raiku Art Community</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .navbar {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary {
+            background-color: #ff5733;
+            border-color: #ff5733;
+        }
+        .btn-primary:hover {
+            background-color: #c70039;
+            border-color: #c70039;
+        }
+        .section {
+            padding: 50px 0;
+        }
+        .gallery-card {
+            transition: transform 0.2s;
+        }
+        .gallery-card:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">Raiku Art</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#gallery">Gallery</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#upload">Upload</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="home" class="section text-center bg-light">
+        <div class="container">
+            <h1>Share Your Art with the World!</h1>
+            <p>Join our community and showcase your creativity.</p>
+            <a href="#upload" class="btn btn-primary">Upload Your Art</a>
+        </div>
+    </section>
+
+    <!-- Upload Section -->
+    <section id="upload" class="section">
+        <div class="container">
+            <h2>Upload Your Artwork</h2>
+            <form id="artUploadForm">
+                <div class="mb-3">
+                    <label for="artistName" class="form-label">Your Name</label>
+                    <input type="text" class="form-control" id="artistName" required>
+                </div>
+                <div class="mb-3">
+                    <label for="artImage" class="form-label">Upload Image</label>
+                    <input type="file" class="form-control" id="artImage" accept="image/*" required>
+                </div>
+                <div class="mb-3">
+                    <label for="artDescription" class="form-label">Description (Optional)</label>
+                    <textarea class="form-control" id="artDescription" rows="4"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="section bg-light">
+        <div class="container">
+            <h2>Art Gallery</h2>
+            <div class="row" id="galleryContainer"></div>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Supabase Config (Replace with your Supabase project details)
+        const supabaseUrl = 'https://supabase.com/dashboard/project/tovaitbkfvviyqyzguze'; // e.g., https://your-project-id.supabase.co
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvdmFpdGJrZnZ2aXlxeXpndXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MTI5MjIsImV4cCI6MjA3NDk4ODkyMn0.dUByWl_YW4uJi_iWGkUgQGcNCr3FSNda5rhC-rd5Sy8
+'; // e.g., eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        const supabase = Supabase.createClient(supabaseUrl, supabaseKey);
+
+        // Upload Functionality
+        document.getElementById('artUploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const artistName = document.getElementById('artistName').value;
+            const artImage = document.getElementById('artImage').files[0];
+            const artDescription = document.getElementById('artDescription').value;
+
+            try {
+                // Upload image to Supabase Storage
+                const { data: storageData, error: storageError } = await supabase.storage
+                    .from('artworks')
+                    .upload(`public/${artImage.name}`, artImage);
+                
+                if (storageError) throw storageError;
+
+                // Get public URL for the image
+                const { data: urlData } = supabase.storage.from('artworks').getPublicUrl(`public/${artImage.name}`);
+                const imageUrl = urlData.publicUrl;
+
+                // Save metadata to Supabase Database
+                const { error: dbError } = await supabase
+                    .from('artworks')
+                    .insert([
+                        { artistName, imageUrl, description: artDescription || '' }
+                    ]);
+
+                if (dbError) throw dbError;
+
+                alert('Artwork uploaded successfully!');
+                document.getElementById('artUploadForm').reset();
+                loadGallery(); // Refresh gallery after upload
+            } catch (error) {
+                console.error('Error uploading artwork:', error);
+                alert('Failed to upload artwork. Please try again.');
+            }
+        });
+
+        // Load Gallery
+        async function loadGallery() {
+            const gallery = document.getElementById('galleryContainer');
+            gallery.innerHTML = ''; // Clear existing content
+            const { data, error } = await supabase
+                .from('artworks')
+                .select('*')
+                .order('createdAt', { ascending: false });
+
+            if (error) {
+                console.error('Error fetching artworks:', error);
+                return;
+            }
+
+            data.forEach((item) => {
+                const card = `
+                    <div class="col-md-4 mb-4">
+                        <div class="card gallery-card">
+                            <img src="${item.imageUrl}" class="card-img-top" alt="Artwork" style="height: 200px; object-fit: cover;">
+                            <div class="card-body">
+                                <h5 class="card-title">${item.artistName}</h5>
+                                <p class="card-text">${item.description || 'No description'}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                gallery.innerHTML += card;
+            });
+        }
+
+        // Load gallery on page load
+        loadGallery();
+    </script>
+</body>
+</html>
