@@ -1,64 +1,61 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Supabase Test</title>
+  <meta charset="UTF-8" />
+  <title>Test Supabase</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-  <h2>Test Supabase Login & Upload</h2>
-  <div>
-    <button id="btnLogin">Login Admin (test)</button>
-  </div>
-  <div style="margin-top:20px;">
-    <input type="file" id="fileInp" />
-    <button id="btnUpload">Upload File</button>
-  </div>
+  <h2>Login Test</h2>
+  <button id="loginBtn">Login as Admin</button>
+  <br /><br />
+
+  <h2>Upload Test</h2>
+  <input type="file" id="fileInput" />
+  <button id="uploadBtn">Upload</button>
 
   <script>
-    // Supabase config
     const supabaseUrl = 'https://tovaitbkfvviyqyzguze.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvdmFpdGJrZnZ2aXlxeXpndXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MTI5MjIsImV4cCI6MjA3NDk4ODkyMn0.dUByWl_YW4uJi_iWGkUgQGcNCr3FSNda5rhC-rd5Sy8';
+
     const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-    // Admin login test
-    document.getElementById('btnLogin').addEventListener('click', async () => {
-      console.log('[Test] Login button clicked');
+    // Admin Login
+    document.getElementById('loginBtn').addEventListener('click', async () => {
       const email = prompt('Enter admin email:');
       const password = prompt('Enter password:');
-      console.log('[Test] Trying login:', email);
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      console.log('[Test] Login result data:', data);
-      console.log('[Test] Login result error:', error);
+
       if (error) {
-        alert('Login error: ' + error.message);
+        console.error('Login error:', error.message);
+        alert('Login failed: ' + error.message);
       } else {
-        alert('Login success');
+        console.log('Login success:', data);
+        alert('Login successful');
       }
     });
 
-    // Upload test
-    document.getElementById('btnUpload').addEventListener('click', async () => {
-      const fileInp = document.getElementById('fileInp');
-      const file = fileInp.files[0];
-      console.log('[Test] file to upload:', file);
+    // Upload File
+    document.getElementById('uploadBtn').addEventListener('click', async () => {
+      const file = document.getElementById('fileInput').files[0];
       if (!file) {
-        alert('No file selected');
+        alert('Please select a file first.');
         return;
       }
+
       const timestamp = Date.now();
-      const fileName = `${timestamp}_${file.name}`;
-      console.log('[Test] Uploading fileName:', fileName);
-      const { error: uploadError } = await supabase.storage
+      const filePath = `public/${timestamp}_${file.name}`;
+
+      const { data, error } = await supabase.storage
         .from('artworks')
-        .upload(fileName, file);
-      console.log('[Test] uploadError:', uploadError);
-      if (uploadError) {
-        alert('Upload failed: ' + uploadError.message);
+        .upload(filePath, file, { upsert: true });
+
+      if (error) {
+        console.error('Upload error:', error.message);
+        alert('Upload failed: ' + error.message);
       } else {
-        const { data: urlData } = supabase.storage.from('artworks').getPublicUrl(fileName);
-        console.log('[Test] Public URL:', urlData.publicUrl);
-        alert('Uploaded! URL: ' + urlData.publicUrl);
+        const { data: publicData } = supabase.storage.from('artworks').getPublicUrl(filePath);
+        alert('Upload successful!\nURL: ' + publicData.publicUrl);
       }
     });
   </script>
