@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Raiku Art Community</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
     <style>
         body {
             background: linear-gradient(135deg, #6e8efb, #a777e3); /* Artsy gradient */
-            font-family: 'Arial', sans-serif;
-            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            color: #000000; /* Black text */
+            font-weight: bold; /* Bold text */
             margin: 0;
             min-height: 100vh;
         }
@@ -23,6 +25,10 @@
         }
         .navbar:hover {
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        .navbar-brand, .nav-link, h1, h2, h5, p, label, button {
+            color: #000000 !important; /* Black text for all */
+            font-weight: bold !important; /* Bold text */
         }
         .btn-primary {
             background-color: #ff5733;
@@ -133,11 +139,11 @@
                         </div>
                         <div class="mb-3">
                             <label for="xUsername" class="form-label">X Username</label>
-                            <input type="text" class="form-control" id="xUsername" placeholder="@username" required>
+                            <input type="text" class="form-control" id="xUsername" placeholder="@Username" required>
                         </div>
                         <div class="mb-3">
                             <label for="discordUsername" class="form-label">Discord Username</label>
-                            <input type="text" class="form-control" id="discordUsername" placeholder="username#1234" required>
+                            <input type="text" class="form-control" id="discordUsername" placeholder="Username#1234" required>
                         </div>
                         <div class="mb-3">
                             <label for="artImage" class="form-label">Upload Image</label>
@@ -183,9 +189,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // Supabase Config (Replace with your Supabase project details)
-        const supabaseUrl = 'https://supabase.com/dashboard/project/tovaitbkfvviyqyzguze'; // e.g., https://your-project-id.supabase.co
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvdmFpdGJrZnZ2aXlxeXpndXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MTI5MjIsImV4cCI6MjA3NDk4ODkyMn0.dUByWl_YW4uJi_iWGkUgQGcNCr3FSNda5rhC-rd5Sy8'; // e.g., eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        // Supabase Config
+        const supabaseUrl = 'https://tovaitbkfvviyqyzguze.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvdmFpdGJrZnZ2aXlxeXpndXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MTI5MjIsImV4cCI6MjA3NDk4ODkyMn0.dUByWl_YW4uJi_iWGkUgQGcNCr3FSNda5rhC-rd5Sy8';
         const supabase = Supabase.createClient(supabaseUrl, supabaseKey);
 
         // Utility: Capitalize first letter of each word
@@ -195,12 +201,21 @@
 
         // Admin Login Status
         let isAdminLoggedIn = false;
-        const adminEmail = 'Krrishmuley@gmail.com'; // Replace with your admin email
+        const adminEmail = 'krrishmuley@gmail.com';
 
         // Admin Login
         document.getElementById('adminLogin').addEventListener('click', (e) => {
             e.preventDefault();
-            new bootstrap.Modal(document.getElementById('adminLoginModal')).show();
+            if (isAdminLoggedIn) {
+                supabase.auth.signOut().then(() => {
+                    isAdminLoggedIn = false;
+                    document.getElementById('adminLogin').innerText = 'Admin Login';
+                    loadGallery();
+                    alert('Admin Logged Out.');
+                });
+            } else {
+                new bootstrap.Modal(document.getElementById('adminLoginModal')).show();
+            }
         });
 
         document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
@@ -213,28 +228,16 @@
                 if (error) throw error;
                 if (email === adminEmail) {
                     isAdminLoggedIn = true;
-                    alert('Admin logged in successfully!');
+                    alert('Admin Logged In Successfully!');
                     document.getElementById('adminLogin').innerText = 'Admin Logout';
-                    loadGallery(); // Refresh gallery to show delete buttons
+                    loadGallery();
                     bootstrap.Modal.getInstance(document.getElementById('adminLoginModal')).hide();
                 } else {
-                    alert('Only admin can log in here!');
+                    alert('Only Admin Can Log In Here!');
                 }
             } catch (error) {
                 console.error('Login error:', error);
-                alert('Login failed. Please check credentials.');
-            }
-        });
-
-        // Admin Logout
-        document.getElementById('adminLogin').addEventListener('click', async (e) => {
-            if (isAdminLoggedIn) {
-                e.preventDefault();
-                await supabase.auth.signOut();
-                isAdminLoggedIn = false;
-                document.getElementById('adminLogin').innerText = 'Admin Login';
-                loadGallery(); // Refresh gallery to hide delete buttons
-                alert('Admin logged out.');
+                alert('Login Failed. Please Check Credentials.');
             }
         });
 
