@@ -7,34 +7,83 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #f8f9fa;
-            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #6e8efb, #a777e3); /* Artsy gradient */
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            margin: 0;
+            min-height: 100vh;
         }
         .navbar {
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        .navbar:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
         }
         .btn-primary {
             background-color: #ff5733;
             border-color: #ff5733;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
         .btn-primary:hover {
             background-color: #c70039;
             border-color: #c70039;
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .btn-primary:active {
+            animation: pulse 0.3s;
+        }
+        .btn-danger {
+            transition: transform 0.2s ease;
+        }
+        .btn-danger:hover {
+            transform: scale(1.05);
         }
         .section {
             padding: 50px 0;
+            animation: fadeIn 1s ease-in;
         }
         .gallery-card {
-            transition: transform 0.2s;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            overflow: hidden;
         }
         .gallery-card:hover {
-            transform: scale(1.05);
+            transform: scale(1.1);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+        .section.bg-light {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border-radius: 15px;
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+        .modal-content {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+        }
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
             <a class="navbar-brand" href="#">Raiku Art</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -44,7 +93,8 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="#gallery">Gallery</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#upload">Upload</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#uploadModal">Upload</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" id="adminLogin">Admin Login</a></li>
                 </ul>
             </div>
         </div>
@@ -53,31 +103,9 @@
     <!-- Home Section -->
     <section id="home" class="section text-center bg-light">
         <div class="container">
-            <h1>Share Your Art with the World!</h1>
-            <p>Join our community and showcase your creativity.</p>
-            <a href="#upload" class="btn btn-primary">Upload Your Art</a>
-        </div>
-    </section>
-
-    <!-- Upload Section -->
-    <section id="upload" class="section">
-        <div class="container">
-            <h2>Upload Your Artwork</h2>
-            <form id="artUploadForm">
-                <div class="mb-3">
-                    <label for="artistName" class="form-label">Your Name</label>
-                    <input type="text" class="form-control" id="artistName" required>
-                </div>
-                <div class="mb-3">
-                    <label for="artImage" class="form-label">Upload Image</label>
-                    <input type="file" class="form-control" id="artImage" accept="image/*" required>
-                </div>
-                <div class="mb-3">
-                    <label for="artDescription" class="form-label">Description (Optional)</label>
-                    <textarea class="form-control" id="artDescription" rows="4"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
+            <h1>Unleash Your Creativity!</h1>
+            <p>Join Our Vibrant Raiku Art Community To Showcase And Discover Stunning Artworks.</p>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">Upload Your Art</button>
         </div>
     </section>
 
@@ -89,23 +117,141 @@
         </div>
     </section>
 
+    <!-- Upload Modal -->
+    <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadModalLabel">Submit Your Masterpiece</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="artUploadForm">
+                        <div class="mb-3">
+                            <label for="artistName" class="form-label">Artist Name</label>
+                            <input type="text" class="form-control" id="artistName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="xUsername" class="form-label">X Username</label>
+                            <input type="text" class="form-control" id="xUsername" placeholder="@username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="discordUsername" class="form-label">Discord Username</label>
+                            <input type="text" class="form-control" id="discordUsername" placeholder="username#1234" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="artImage" class="form-label">Upload Image</label>
+                            <input type="file" class="form-control" id="artImage" accept="image/*" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="artDescription" class="form-label">Description (Optional)</label>
+                            <textarea class="form-control" id="artDescription" rows="4"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div class="modal fade" id="adminLoginModal" tabindex="-1" aria-labelledby="adminLoginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="adminLoginModalLabel">Admin Login</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="adminLoginForm">
+                        <div class="mb-3">
+                            <label for="adminEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="adminEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="adminPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="adminPassword" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         // Supabase Config (Replace with your Supabase project details)
         const supabaseUrl = 'https://supabase.com/dashboard/project/tovaitbkfvviyqyzguze'; // e.g., https://your-project-id.supabase.co
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvdmFpdGJrZnZ2aXlxeXpndXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MTI5MjIsImV4cCI6MjA3NDk4ODkyMn0.dUByWl_YW4uJi_iWGkUgQGcNCr3FSNda5rhC-rd5Sy8
-'; // e.g., eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvdmFpdGJrZnZ2aXlxeXpndXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MTI5MjIsImV4cCI6MjA3NDk4ODkyMn0.dUByWl_YW4uJi_iWGkUgQGcNCr3FSNda5rhC-rd5Sy8'; // e.g., eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
         const supabase = Supabase.createClient(supabaseUrl, supabaseKey);
+
+        // Utility: Capitalize first letter of each word
+        function toTitleCase(str) {
+            return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+        }
+
+        // Admin Login Status
+        let isAdminLoggedIn = false;
+        const adminEmail = 'Krrishmuley@gmail.com'; // Replace with your admin email
+
+        // Admin Login
+        document.getElementById('adminLogin').addEventListener('click', (e) => {
+            e.preventDefault();
+            new bootstrap.Modal(document.getElementById('adminLoginModal')).show();
+        });
+
+        document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('adminEmail').value;
+            const password = document.getElementById('adminPassword').value;
+
+            try {
+                const { error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) throw error;
+                if (email === adminEmail) {
+                    isAdminLoggedIn = true;
+                    alert('Admin logged in successfully!');
+                    document.getElementById('adminLogin').innerText = 'Admin Logout';
+                    loadGallery(); // Refresh gallery to show delete buttons
+                    bootstrap.Modal.getInstance(document.getElementById('adminLoginModal')).hide();
+                } else {
+                    alert('Only admin can log in here!');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('Login failed. Please check credentials.');
+            }
+        });
+
+        // Admin Logout
+        document.getElementById('adminLogin').addEventListener('click', async (e) => {
+            if (isAdminLoggedIn) {
+                e.preventDefault();
+                await supabase.auth.signOut();
+                isAdminLoggedIn = false;
+                document.getElementById('adminLogin').innerText = 'Admin Login';
+                loadGallery(); // Refresh gallery to hide delete buttons
+                alert('Admin logged out.');
+            }
+        });
 
         // Upload Functionality
         document.getElementById('artUploadForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const artistName = document.getElementById('artistName').value;
+            const xUsername = document.getElementById('xUsername').value;
+            const discordUsername = document.getElementById('discordUsername').value;
             const artImage = document.getElementById('artImage').files[0];
             const artDescription = document.getElementById('artDescription').value;
+
+            if (!artistName || !xUsername || !discordUsername || !artImage) {
+                alert('Please Fill All Required Fields!');
+                return;
+            }
 
             try {
                 // Upload image to Supabase Storage
@@ -123,24 +269,31 @@
                 const { error: dbError } = await supabase
                     .from('artworks')
                     .insert([
-                        { artistName, imageUrl, description: artDescription || '' }
+                        {
+                            artistName: toTitleCase(artistName),
+                            xUsername: toTitleCase(xUsername),
+                            discordUsername: toTitleCase(discordUsername),
+                            imageUrl,
+                            description: artDescription ? toTitleCase(artDescription) : ''
+                        }
                     ]);
 
                 if (dbError) throw dbError;
 
-                alert('Artwork uploaded successfully!');
+                alert('Artwork Uploaded Successfully!');
                 document.getElementById('artUploadForm').reset();
-                loadGallery(); // Refresh gallery after upload
+                bootstrap.Modal.getInstance(document.getElementById('uploadModal')).hide();
+                loadGallery();
             } catch (error) {
                 console.error('Error uploading artwork:', error);
-                alert('Failed to upload artwork. Please try again.');
+                alert('Failed To Upload Artwork. Please Try Again.');
             }
         });
 
         // Load Gallery
         async function loadGallery() {
             const gallery = document.getElementById('galleryContainer');
-            gallery.innerHTML = ''; // Clear existing content
+            gallery.innerHTML = '';
             const { data, error } = await supabase
                 .from('artworks')
                 .select('*')
@@ -158,12 +311,45 @@
                             <img src="${item.imageUrl}" class="card-img-top" alt="Artwork" style="height: 200px; object-fit: cover;">
                             <div class="card-body">
                                 <h5 class="card-title">${item.artistName}</h5>
-                                <p class="card-text">${item.description || 'No description'}</p>
+                                <p class="card-text">X: ${item.xUsername}</p>
+                                <p class="card-text">Discord: ${item.discordUsername}</p>
+                                <p class="card-text">${item.description || 'No Description'}</p>
+                                ${isAdminLoggedIn ? `<button class="btn btn-danger btn-sm delete-btn" data-id="${item.id}" data-image="${item.imageUrl}">Delete</button>` : ''}
                             </div>
                         </div>
                     </div>
                 `;
                 gallery.innerHTML += card;
+            });
+
+            // Add delete event listeners
+            document.querySelectorAll('.delete-btn').forEach((btn) => {
+                btn.addEventListener('click', async (e) => {
+                    const id = e.target.getAttribute('data-id');
+                    const imageUrl = e.target.getAttribute('data-image');
+                    const imagePath = imageUrl.split('/').pop();
+
+                    try {
+                        // Delete from database
+                        const { error: dbError } = await supabase
+                            .from('artworks')
+                            .delete()
+                            .eq('id', id);
+                        if (dbError) throw dbError;
+
+                        // Delete from storage
+                        const { error: storageError } = await supabase.storage
+                            .from('artworks')
+                            .remove([`public/${imagePath}`]);
+                        if (storageError) throw storageError;
+
+                        alert('Artwork Deleted Successfully!');
+                        loadGallery();
+                    } catch (error) {
+                        console.error('Error deleting artwork:', error);
+                        alert('Failed To Delete Artwork. Please Try Again.');
+                    }
+                });
             });
         }
 
