@@ -2,63 +2,179 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Raiku Art Community</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet" />
   <style>
     body {
       background: linear-gradient(135deg, #6e8efb, #a777e3);
       font-family: 'Poppins', sans-serif;
-      color: #000000;
-      font-weight: bold;
+      color: #111;
+      font-weight: 600;
       margin: 0;
       min-height: 100vh;
+      overflow-x: hidden;
     }
+    /* Navbar */
     .navbar {
-      background-color: rgba(255, 255, 255, 0.9);
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      background-color: rgba(255 255 255 / 0.95);
+      box-shadow: 0 5px 15px rgb(0 0 0 / 0.1);
       position: sticky;
       top: 0;
-      z-index: 1000;
+      z-index: 1100;
+      transition: background-color 0.3s ease;
     }
-    .navbar-brand, .nav-link, h1, h2, h5, p, label, button {
-      color: #000000 !important;
-      font-weight: bold !important;
+    .navbar-brand {
+      font-size: 1.7rem;
+      letter-spacing: 2px;
+      color: #ff5733 !important;
+      font-weight: 900 !important;
+      transition: color 0.3s ease;
+    }
+    .navbar-brand:hover {
+      color: #c70039 !important;
+    }
+    .nav-link {
+      color: #333 !important;
+      font-weight: 700;
+      margin-left: 15px;
+      transition: color 0.3s ease, transform 0.2s ease;
+    }
+    .nav-link:hover {
+      color: #ff5733 !important;
+      transform: scale(1.1);
     }
     .btn-primary {
       background-color: #ff5733;
-      border-color: #ff5733;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border: none;
+      font-weight: 700;
+      padding: 10px 22px;
+      border-radius: 30px;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 4px 10px rgb(255 87 51 / 0.4);
     }
     .btn-primary:hover {
       background-color: #c70039;
-      border-color: #c70039;
+      box-shadow: 0 6px 14px rgb(199 0 57 / 0.6);
       transform: scale(1.05);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .btn-danger {
+      background-color: #c70039;
+      border: none;
+      font-weight: 700;
+      padding: 7px 14px;
+      border-radius: 20px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 3px 8px rgb(199 0 57 / 0.5);
     }
     .btn-danger:hover {
-      transform: scale(1.05);
+      background-color: #ff0000;
+      transform: scale(1.1);
+      box-shadow: 0 5px 15px rgb(255 0 0 / 0.7);
     }
+    /* Sections */
     .section {
-      padding: 50px 0;
-    }
-    .gallery-card {
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      background-color: rgba(255, 255, 255, 0.95);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    .gallery-card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      padding: 60px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
     }
     .section.bg-light {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(5px);
+      background: rgba(255 255 255 / 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgb(0 0 0 / 0.1);
+    }
+    h1, h2 {
+      color: #222;
+      text-shadow: 0 1px 2px rgb(0 0 0 / 0.1);
+      margin-bottom: 20px;
+    }
+    p {
+      color: #444;
+      font-weight: 500;
+      margin-bottom: 30px;
+    }
+    /* Gallery Grid */
+    #galleryContainer {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    .gallery-card {
+      background: rgba(255 255 255 / 0.9);
       border-radius: 15px;
-      margin: 20px auto;
-      max-width: 1200px;
+      overflow: hidden;
+      box-shadow: 0 6px 15px rgb(0 0 0 / 0.15);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+    }
+    .gallery-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 25px rgb(0 0 0 / 0.25);
+    }
+    .gallery-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-bottom: 1px solid #ddd;
+      transition: transform 0.4s ease;
+    }
+    .gallery-card:hover img {
+      transform: scale(1.05);
+    }
+    .card-body {
+      padding: 15px 18px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .card-body h5 {
+      margin-bottom: 8px;
+      color: #ff5733;
+      font-weight: 900;
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+    .card-body p {
+      margin: 2px 0;
+      color: #555;
+      font-weight: 600;
+      font-size: 0.9rem;
+      line-height: 1.3;
+    }
+    /* Form tweaks */
+    #artUploadForm input, #artUploadForm textarea,
+    #adminLoginForm input {
+      border-radius: 12px;
+      border: 1.5px solid #ddd;
+      padding: 10px 14px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+    #artUploadForm input:focus, #artUploadForm textarea:focus,
+    #adminLoginForm input:focus {
+      border-color: #ff5733;
+      outline: none;
+      box-shadow: 0 0 8px rgb(255 87 51 / 0.5);
+    }
+    /* Responsive tweaks */
+    @media (max-width: 575px) {
+      .navbar-brand {
+        font-size: 1.3rem;
+      }
+      .btn-primary {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+      }
+      .btn-danger {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+      }
     }
   </style>
 </head>
@@ -67,7 +183,7 @@
   <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container">
       <a class="navbar-brand" href="#">Raiku Art</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
@@ -94,26 +210,26 @@
   <section id="gallery" class="section bg-light">
     <div class="container">
       <h2>Art Gallery</h2>
-      <div class="row" id="galleryContainer"></div>
+      <div id="galleryContainer">Loading...</div>
     </div>
   </section>
 
   <!-- Upload Modal -->
-  <div class="modal fade" id="uploadModal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
+  <div class="modal fade" id="uploadModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 shadow-lg">
+        <div class="modal-header border-0">
           <h5 class="modal-title">Submit Your Masterpiece</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body px-4">
           <form id="artUploadForm">
-            <div class="mb-3"><label>Artist Name</label><input type="text" class="form-control" id="artistName" required></div>
-            <div class="mb-3"><label>X Username</label><input type="text" class="form-control" id="xUsername" placeholder="@username" required></div>
-            <div class="mb-3"><label>Discord Username</label><input type="text" class="form-control" id="discordUsername" placeholder="User#1234" required></div>
-            <div class="mb-3"><label>Upload Image</label><input type="file" class="form-control" id="artImage" accept="image/*" required></div>
-            <div class="mb-3"><label>Description</label><textarea class="form-control" id="artDescription"></textarea></div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <div class="mb-3"><label for="artistName" class="form-label">Artist Name</label><input type="text" class="form-control" id="artistName" required /></div>
+            <div class="mb-3"><label for="xUsername" class="form-label">X Username</label><input type="text" class="form-control" id="xUsername" placeholder="@username" required /></div>
+            <div class="mb-3"><label for="discordUsername" class="form-label">Discord Username</label><input type="text" class="form-control" id="discordUsername" placeholder="User#1234" required /></div>
+            <div class="mb-3"><label for="artImage" class="form-label">Upload Image</label><input type="file" class="form-control" id="artImage" accept="image/*" required /></div>
+            <div class="mb-3"><label for="artDescription" class="form-label">Description</label><textarea class="form-control" id="artDescription" rows="3"></textarea></div>
+            <button type="submit" class="btn btn-primary w-100">Submit</button>
           </form>
         </div>
       </div>
@@ -121,18 +237,18 @@
   </div>
 
   <!-- Admin Modal -->
-  <div class="modal fade" id="adminLoginModal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
+  <div class="modal fade" id="adminLoginModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 shadow-lg">
+        <div class="modal-header border-0">
           <h5 class="modal-title">Admin Login</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body px-4">
           <form id="adminLoginForm">
-            <div class="mb-3"><label>Email</label><input type="email" class="form-control" id="adminEmail" value="krrishmuley@gmail.com" required></div>
-            <div class="mb-3"><label>Password</label><input type="password" class="form-control" id="adminPassword" required></div>
-            <button type="submit" class="btn btn-primary">Login</button>
+            <div class="mb-3"><label for="adminEmail" class="form-label">Email</label><input type="email" class="form-control" id="adminEmail" value="krrishmuley@gmail.com" required /></div>
+            <div class="mb-3"><label for="adminPassword" class="form-label">Password</label><input type="password" class="form-control" id="adminPassword" required /></div>
+            <button type="submit" class="btn btn-primary w-100">Login</button>
           </form>
         </div>
       </div>
@@ -143,9 +259,8 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // Supabase Setup
     const supabaseUrl = 'https://tovaitbkfvviyqyzguze.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvdmFpdGJrZnZ2aXlxeXpndXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MTI5MjIsImV4cCI6MjA3NDk4ODkyMn0.dUByWl_YW4uJi_iWGkUgQGcNCr3FSNda5rhC-rd5Sy8';
+    const supabaseKey = 'YOUR_SUPABASE_KEY_HERE'; // Replace with your actual key
     const client = supabase.createClient(supabaseUrl, supabaseKey);
 
     const adminEmail = 'krrishmuley@gmail.com';
@@ -155,7 +270,6 @@
       return str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
     }
 
-    // Load gallery on start
     window.addEventListener('DOMContentLoaded', () => {
       checkAdminSession();
       loadGallery();
@@ -169,8 +283,7 @@
       }
     }
 
-    // Admin Login / Logout
-    document.getElementById('adminLogin').addEventListener('click', async (e) => {
+    document.getElementById('adminLogin').addEventListener('click', async e => {
       e.preventDefault();
       if (isAdminLoggedIn) {
         await client.auth.signOut();
@@ -183,7 +296,7 @@
       }
     });
 
-    document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+    document.getElementById('adminLoginForm').addEventListener('submit', async e => {
       e.preventDefault();
       const email = document.getElementById('adminEmail').value;
       const password = document.getElementById('adminPassword').value;
@@ -200,93 +313,77 @@
       }
     });
 
-    // Upload Art
-    document.getElementById('artUploadForm').addEventListener('submit', async (e) => {
+    document.getElementById('artUploadForm').addEventListener('submit', async e => {
       e.preventDefault();
-      const artistName = document.getElementById('artistName').value;
-      const xUsername = document.getElementById('xUsername').value;
-      const discordUsername = document.getElementById('discordUsername').value;
+      const artistName = document.getElementById('artistName').value.trim();
+      const xUsername = document.getElementById('xUsername').value.trim();
+      const discordUsername = document.getElementById('discordUsername').value.trim();
       const artImage = document.getElementById('artImage').files[0];
-      const artDescription = document.getElementById('artDescription').value;
+      const artDescription = document.getElementById('artDescription').value.trim();
       const timestamp = Date.now();
-      const fileName = `${timestamp}_${artImage.name}`;
+      const fileName = `${timestamp}_${artImage.name.replace(/\s/g, '_')}`;
 
-      const { error: uploadError } = await client.storage
-        .from('artworks')
-        .upload(fileName, artImage);
+      if (!artImage) return alert('Please select an image.');
 
-      if (uploadError) return alert('Upload failed: ' + uploadError.message);
+      const { data: uploadData, error: uploadError } = await client.storage.from('art-gallery').upload(fileName, artImage);
+      if (uploadError) return alert('Image upload failed: ' + uploadError.message);
 
-      const { data: urlData } = client.storage.from('artworks').getPublicUrl(fileName);
-      const imageUrl = urlData.publicUrl;
+      const { publicURL, error: urlError } = client.storage.from('art-gallery').getPublicUrl(fileName);
+      if (urlError) return alert('Failed to get image URL: ' + urlError.message);
 
-      const { error: dbError } = await client
-        .from('Artworks')
-        .insert([{
-          artistName: toTitleCase(artistName),
-          xUsername,
-          discordUsername,
-          description: artDescription,
-          imageUrl,
-          createdAt: new Date().toISOString()
-        }]);
+      const { error: dbError } = await client.from('gallery').insert({
+        artist_name: toTitleCase(artistName),
+        x_username: xUsername,
+        discord_username: discordUsername,
+        image_url: publicURL,
+        description: artDescription,
+      });
+      if (dbError) return alert('Failed to save artwork info: ' + dbError.message);
 
-      if (dbError) return alert('Database error: ' + dbError.message);
-
-      alert('Artwork Uploaded!');
-      document.getElementById('artUploadForm').reset();
+      alert('Artwork uploaded successfully!');
       bootstrap.Modal.getInstance(document.getElementById('uploadModal')).hide();
+      e.target.reset();
       loadGallery();
     });
 
-    // Load Gallery
     async function loadGallery() {
-      const container = document.getElementById('galleryContainer');
-      container.innerHTML = '<p>Loading...</p>';
-
-      const { data, error } = await client
-        .from('Artworks')
-        .select('*')
-        .order('createdAt', { ascending: false });
-
-      if (error) return container.innerHTML = '<p>Error loading gallery.</p>';
-
-      if (data.length === 0) {
-        container.innerHTML = '<p>No artworks uploaded yet.</p>';
+      const galleryContainer = document.getElementById('galleryContainer');
+      galleryContainer.innerHTML = 'Loading...';
+      let query = client.from('gallery').select('*').order('id', { ascending: false });
+      if (!isAdminLoggedIn) query = query.eq('approved', true);
+      const { data, error } = await query;
+      if (error) {
+        galleryContainer.innerHTML = 'Failed to load gallery.';
         return;
       }
-
-      container.innerHTML = '';
-      data.forEach((art) => {
+      if (!data.length) {
+        galleryContainer.innerHTML = 'No artwork to display yet.';
+        return;
+      }
+      galleryContainer.innerHTML = '';
+      data.forEach(item => {
         const card = document.createElement('div');
-        card.className = 'col-md-4 mb-4';
+        card.className = 'gallery-card';
         card.innerHTML = `
-          <div class="card gallery-card">
-            <img src="${art.imageUrl}" class="card-img-top" style="height: 200px; object-fit: cover;">
-            <div class="card-body">
-              <h5>${art.artistName}</h5>
-              <p>X: ${art.xUsername}</p>
-              <p>Discord: ${art.discordUsername}</p>
-              <p>${art.description || 'No description'}</p>
-              ${isAdminLoggedIn ? `<button class="btn btn-danger btn-sm" data-id="${art.id}" data-url="${art.imageUrl}">Delete</button>` : ''}
-            </div>
+          <img src="${item.image_url}" alt="Artwork by ${item.artist_name}" />
+          <div class="card-body">
+            <h5>${item.artist_name}</h5>
+            <p><strong>X:</strong> ${item.x_username}</p>
+            <p><strong>Discord:</strong> ${item.discord_username}</p>
+            <p>${item.description || ''}</p>
+            ${isAdminLoggedIn ? `<button class="btn btn-danger btn-sm" data-id="${item.id}">Delete</button>` : ''}
           </div>
         `;
-        container.appendChild(card);
-      });
-
-      // Delete Button
-      document.querySelectorAll('.btn-danger').forEach(btn => {
-        btn.addEventListener('click', async () => {
-          const id = btn.getAttribute('data-id');
-          const imagePath = btn.getAttribute('data-url').split('/').pop();
-
-          await client.from('Artworks').delete().eq('id', id);
-          await client.storage.from('artworks').remove([imagePath]);
-
-          alert('Deleted!');
-          loadGallery();
-        });
+        galleryContainer.appendChild(card);
+        if (isAdminLoggedIn) {
+          card.querySelector('button').addEventListener('click', async () => {
+            if (!confirm('Are you sure to delete this artwork?')) return;
+            const { error } = await client.from('gallery').delete().eq('id', item.id);
+            if (error) return alert('Delete failed: ' + error.message);
+            alert('Artwork deleted.');
+            loadGallery();
+          });
+        }
       });
     }
   </script>
