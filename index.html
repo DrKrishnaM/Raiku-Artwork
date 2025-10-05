@@ -169,13 +169,24 @@
       transform: scale(1);
       opacity: 1;
     }
-    .form-control {
+    .form-control, .form-select {
       background: #333333;
       color: #ffffff;
       border: none;
     }
-    .form-control::placeholder {
+    .form-control::placeholder, .form-select::placeholder {
       color: #cccccc;
+    }
+    .form-select {
+      background: linear-gradient(45deg, #ff00ff, #00ffff);
+      border-radius: 10px;
+      padding: 8px;
+      font-size: 1rem;
+      max-width: 200px;
+    }
+    .form-select option {
+      background: #333333;
+      color: #ffffff;
     }
     .btn-close {
       filter: invert(1);
@@ -326,6 +337,11 @@
         flex: 0 0 50%;
         max-width: 50%;
       }
+      .form-select {
+        font-size: 0.9rem;
+        padding: 6px;
+        max-width: 100%;
+      }
     }
     @media (min-width: 992px) {
       .gallery-container .row {
@@ -370,7 +386,17 @@
   <!-- Gallery Section -->
   <section id="gallery" class="section">
     <div class="container gallery-container">
-      <h2>Art Gallery</h2>
+      <div class="row align-items-center mb-4">
+        <div class="col-6">
+          <h2>Art Gallery</h2>
+        </div>
+        <div class="col-6 text-end">
+          <select id="sortFilter" class="form-select">
+            <option value="descending">Sort: Newest First</option>
+            <option value="ascending">Sort: Oldest First</option>
+          </select>
+        </div>
+      </div>
       <div class="row" id="galleryContainer"></div>
     </div>
   </section>
@@ -467,6 +493,8 @@
     window.addEventListener('DOMContentLoaded', () => {
       checkAdminSession();
       loadGallery();
+      // Set default sort to newest first
+      document.getElementById('sortFilter').value = 'descending';
     });
 
     // Handle back button to restore scroll position
@@ -476,6 +504,12 @@
         fullscreenModal.hide();
         window.scrollTo(0, lastScrollPosition);
       }
+    });
+
+    // Sort filter change
+    document.getElementById('sortFilter').addEventListener('change', (e) => {
+      console.log('Sort order changed:', e.target.value);
+      loadGallery(e.target.value);
     });
 
     async function checkAdminSession() {
@@ -600,14 +634,14 @@
     });
 
     // Load Gallery
-    async function loadGallery() {
+    async function loadGallery(sortOrder = 'descending') {
       const container = document.getElementById('galleryContainer');
       container.innerHTML = '<p>Loading...</p>';
 
       const { data, error } = await client
         .from('Artworks')
         .select('*')
-        .order('createdAt', { ascending: false });
+        .order('createdAt', { ascending: sortOrder === 'ascending' });
 
       if (error) {
         console.error('Gallery load error:', error);
@@ -671,7 +705,7 @@
           }
 
           alert('Deleted!');
-          loadGallery();
+          loadGallery(document.getElementById('sortFilter').value);
         });
       });
     }
