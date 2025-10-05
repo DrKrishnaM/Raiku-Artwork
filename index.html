@@ -37,13 +37,17 @@
       display: flex;
       align-items: center;
       gap: 20px;
-      color: #ffff00 !important;
       font-weight: bold !important;
       font-size: 3rem !important;
+      background: linear-gradient(45deg, #ff4500, #ffff00, #00ff00);
+      background-size: 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientShift 3s ease-in-out infinite;
     }
     .navbar-brand img {
-      width: 64px;
-      height: 64px;
+      width: 72px;
+      height: 72px;
       border-radius: 50%;
       object-fit: cover;
       transition: transform 0.3s ease;
@@ -70,7 +74,11 @@
     .nav-link:hover::after {
       width: 100%;
     }
-    h1, h2, h5, p, label, button {
+    h1, h5, p, label, button {
+      color: #ffffff !important;
+      font-weight: bold !important;
+    }
+    h2 {
       color: #ffffff !important;
       font-weight: bold !important;
     }
@@ -347,8 +355,8 @@
         font-size: 2rem !important;
       }
       .navbar-brand img {
-        width: 48px;
-        height: 48px;
+        width: 56px;
+        height: 56px;
       }
       .gallery-card img {
         height: 150px;
