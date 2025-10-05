@@ -500,6 +500,10 @@
         }
 
         const { data: urlData } = client.storage.from('artworks').getPublicUrl(fileName);
+        if (!urlData.publicUrl) {
+          alert(`Failed to get public URL for image ${artImage.name}`);
+          return;
+        }
         uploadedImages.push({
           imageUrl: urlData.publicUrl,
           fileName: fileName
@@ -512,7 +516,7 @@
         xUsername,
         discordUsername,
         description: artDescription,
-        imageUrl: image.publicUrl,
+        imageUrl: image.imageUrl, // Fixed: Use image.imageUrl instead of image.publicUrl
         createdAt: new Date().toISOString()
       }));
 
@@ -559,18 +563,21 @@
 
       container.innerHTML = '';
       data.forEach((art, index) => {
+        console.log('Art image URL:', art.imageUrl); // Debug: Log image URL
         const card = document.createElement('div');
         card.className = 'col-lg-3 col-md-6 col-sm-6 mb-4';
         card.style.setProperty('--i', index);
         card.innerHTML = `
-          <div class="card gallery-card" data-image="${art.imageUrl}">
-            <img src="${art.imageUrl}" class="card-img-top" style="height: 200px; object-fit: contain;">
+          <div class="card gallery-card" data-image="${art.imageUrl || ''}">
+            ${art.imageUrl ? 
+              `<img src="${art.imageUrl}" class="card-img-top" style="height: 200px; object-fit: contain;" onerror="this.src='https://via.placeholder.com/200x200?text=Image+Not+Found';">` : 
+              `<div style="height: 200px; background: #333; display: flex; align-items: center; justify-content: center;">Image Not Found</div>`}
             <div class="card-body">
               <h5>${art.artistName}</h5>
               <p>X: ${art.xUsername}</p>
               <p>Discord: ${art.discordUsername}</p>
               ${art.description ? `<p>${art.description}</p>` : ''}
-              ${isAdminLoggedIn ? `<button class="btn btn-danger btn-sm" data-id="${art.id}" data-url="${art.imageUrl}">Delete</button>` : ''}
+              ${isAdminLoggedIn ? `<button class="btn btn-danger btn-sm" data-id="${art.id}" data-url="${art.imageUrl || ''}">Delete</button>` : ''}
             </div>
           </div>
         `;
@@ -585,10 +592,12 @@
 
           lastScrollPosition = window.scrollY;
           const imageUrl = card.getAttribute('data-image');
-          document.getElementById('fullscreenArtImage').src = imageUrl;
-          const fullscreenModal = new bootstrap.Modal(document.getElementById('fullscreenArtModal'));
-          fullscreenModal.show();
-          window.history.pushState({ modal: 'fullscreen' }, '', '#fullscreen');
+          if (imageUrl) {
+            document.getElementById('fullscreenArtImage').src = imageUrl;
+            const fullscreenModal = new bootstrap.Modal(document.getElementById('fullscreenArtModal'));
+            fullscreenModal.show();
+            window.history.pushState({ modal: 'fullscreen' }, '', '#fullscreen');
+          }
         });
       });
 
@@ -600,7 +609,9 @@
           const imagePath = btn.getAttribute('data-url').split('/').pop();
 
           await client.from('Artworks').delete().eq('id', id);
-          await client.storage.from('artworks').remove([imagePath]);
+          if (imagePath) {
+            await client.storage.from('artworks').remove([imagePath]);
+          }
 
           alert('Deleted!');
           loadGallery();
