@@ -351,7 +351,7 @@
             <div class="mb-3"><label>Artist Name</label><input type="text" class="form-control" id="artistName" required></div>
             <div class="mb-3"><label>X Username</label><input type="text" class="form-control" id="xUsername" placeholder="@username" required></div>
             <div class="mb-3"><label>Discord Username</label><input type="text" class="form-control" id="discordUsername" placeholder="User#1234" required></div>
-            <div class="mb-3"><label>Upload Image</label><input type="file" class="form-control" id="artImage" accept="image/*" required></div>
+            <div class="mb-3"><label>Upload Image(s)</label><input type="file" class="form-control" id="artImage" accept="image/*" multiple required></div>
             <div class="mb-3"><label>Description</label><textarea class="form-control" id="artDescription"></textarea></div>
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
@@ -365,7 +365,7 @@
     <div class="modal-dialog modal-sm">
       <div class="modal-content">
         <div class="modal-body">
-          <p>Boom! Your Art is Live! 🎨</p>
+          <p id="successMessage">Boom! Your Art is Live! 🎨</p>
           <button class="btn btn-primary" onclick="window.location.href='#gallery'">Check It Out</button>
         </div>
       </div>
@@ -478,35 +478,60 @@
       const artistName = document.getElementById('artistName').value;
       const xUsername = document.getElementById('xUsername').value;
       const discordUsername = document.getElementById('discordUsername').value;
-      const artImage = document.getElementById('artImage').files[0];
+      const artImages = document.getElementById('artImage').files;
       const artDescription = document.getElementById('artDescription').value;
       const timestamp = Date.now();
-      const fileName = `${timestamp}_${artImage.name}`;
 
-      const { error: uploadError } = await client.storage
-        .from('artworks')
-        .upload(fileName, artImage);
+      // Array to store uploaded image URLs
+      const uploadedImages = [];
 
-      if (uploadError) return alert('Upload failed: ' + uploadError.message);
+      // Upload each image
+      for (let i = 0; i < artImages.length; i++) {
+        const artImage = artImages[i];
+        const fileName = `${timestamp}_${i}_${artImage.name}`;
 
-      const { data: urlData } = client.storage.from('artworks').getPublicUrl(fileName);
-      const imageUrl = urlData.publicUrl;
+        const { error: uploadError } = await client.storage
+          .from('artworks')
+          .upload(fileName, artImage);
+
+        if (uploadError) {
+          alert(`Upload failed for image ${artImage.name}: ${uploadError.message}`);
+          return;
+        }
+
+        const { data: urlData } = client.storage.from('artworks').getPublicUrl(fileName);
+        uploadedImages.push({
+          imageUrl: urlData.publicUrl,
+          fileName: fileName
+        });
+      }
+
+      // Insert all images into the database with the same details
+      const artworks = uploadedImages.map(image => ({
+        artistName: toTitleCase(artistName),
+        xUsername,
+        discordUsername,
+        description: artDescription,
+        imageUrl: image.publicUrl,
+        createdAt: new Date().toISOString()
+      }));
 
       const { error: dbError } = await client
         .from('Artworks')
-        .insert([{
-          artistName: toTitleCase(artistName),
-          xUsername,
-          discordUsername,
-          description: artDescription,
-          imageUrl,
-          createdAt: new Date().toISOString()
-        }]);
+        .insert(artworks);
 
-      if (dbError) return alert('Database error: ' + dbError.message);
+      if (dbError) {
+        // If database insertion fails, remove uploaded images
+        for (const image of uploadedImages) {
+          await client.storage.from('artworks').remove([image.fileName]);
+        }
+        return alert('Database error: ' + dbError.message);
+      }
 
       // Show success modal
       const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+      const successMessage = document.getElementById('successMessage');
+      successMessage.textContent = artImages.length > 1 ? 'Boom! Your Arts are Live! 🎨' : 'Boom! Your Art is Live! 🎨';
       successModal.show();
       setTimeout(() => successModal.hide(), 3000);
 
