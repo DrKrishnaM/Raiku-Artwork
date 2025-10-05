@@ -8,20 +8,126 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
   <style>
     body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
       background: #000000;
       font-family: 'Poppins', sans-serif;
       color: #ffffff;
       font-weight: bold;
-      margin: 0;
-      min-height: 100vh;
       overflow-x: hidden;
+      position: relative;
     }
-    @media (min-width: 992px) {
-      body {
-        background: url('https://github.com/krishna077272/raiku-image/raw/main/photo_2025-10-01_18-33-44.jpg') no-repeat center center fixed;
-        background-size: cover;
-      }
+    /* Anime-Style Animated Background */
+    .anime-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
     }
+    /* Pulsating Glow (Demon Slayer Breathing Effect) */
+    .glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, rgba(255, 69, 0, 0.3), rgba(255, 0, 0, 0.2), rgba(128, 0, 128, 0.1));
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: demonPulse 4s ease-in-out infinite;
+      z-index: 1;
+    }
+    @keyframes demonPulse {
+      0% { transform: translate(-50%, -50%) scale(0.7); opacity: 0.5; }
+      50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.8; }
+      100% { transform: translate(-50%, -50%) scale(0.7); opacity: 0.5; }
+    }
+    /* Floating Particles (Solo Leveling Portal Energy) */
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      animation: soloFloat 6s ease-in-out infinite;
+      opacity: 0.8;
+      pointer-events: none;
+    }
+    .particle:nth-child(1) {
+      width: 12px;
+      height: 12px;
+      background: #ff4500;
+      top: 15%;
+      left: 10%;
+      animation-delay: 0s;
+    }
+    .particle:nth-child(2) {
+      width: 10px;
+      height: 10px;
+      background: #1e90ff;
+      top: 70%;
+      left: 85%;
+      animation-delay: 1.5s;
+    }
+    .particle:nth-child(3) {
+      width: 15px;
+      height: 15px;
+      background: #c0c0c0;
+      top: 40%;
+      left: 60%;
+      animation-delay: 3s;
+    }
+    .particle:nth-child(4) {
+      width: 8px;
+      height: 8px;
+      background: #800080;
+      top: 80%;
+      left: 20%;
+      animation-delay: 0.5s;
+    }
+    .particle:nth-child(5) {
+      width: 14px;
+      height: 14px;
+      background: #ff0000;
+      top: 30%;
+      left: 90%;
+      animation-delay: 2s;
+    }
+    @keyframes soloFloat {
+      0% { transform: translate(0, 0); }
+      25% { transform: translate(30px, -30px); opacity: 1; }
+      50% { transform: translate(0, 0); opacity: 0.8; }
+      75% { transform: translate(-30px, 30px); opacity: 1; }
+      100% { transform: translate(0, 0); opacity: 0.8; }
+    }
+    /* Subtle Waves (Anime Flow Effect) */
+    .wave {
+      position: absolute;
+      width: 150%;
+      height: 150px;
+      background: linear-gradient(to right, rgba(255, 0, 0, 0.1), rgba(30, 144, 255, 0.1), rgba(128, 0, 128, 0.1));
+      border-radius: 50%;
+      animation: animeWave 10s ease-in-out infinite;
+      opacity: 0.4;
+      bottom: -50px;
+      left: -25%;
+    }
+    .wave:nth-child(2) {
+      animation-delay: -5s;
+      background: linear-gradient(to right, rgba(255, 69, 0, 0.1), rgba(192, 192, 192, 0.1), rgba(255, 0, 0, 0.1));
+    }
+    @keyframes animeWave {
+      0% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-30px) scale(1.2); }
+      100% { transform: translateY(0) scale(1); }
+    }
+    /* Ensure content stands out */
+    .content {
+      position: relative;
+      z-index: 1;
+    }
+    /* Existing Styles (Unchanged, just ensuring compatibility) */
     .navbar {
       background: transparent;
       box-shadow: none;
@@ -55,34 +161,15 @@
     .navbar-brand img:hover {
       transform: scale(1.1);
     }
-    .nav-link {
-      color: #ffffff !important;
-      font-weight: bold !important;
-      position: relative;
-      transition: color 0.3s ease;
+    @media (max-width: 767px) {
+      .navbar-brand {
+        font-size: 2rem !important;
+      }
+      .navbar-brand img {
+        width: 56px;
+        height: 56px;
+      }
     }
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      width: 0;
-      height: 2px;
-      bottom: 0;
-      left: 0;
-      background-color: #ffff00;
-      transition: width 0.3s ease;
-    }
-    .nav-link:hover::after {
-      width: 100%;
-    }
-    h1, h5, p, label, button {
-      color: #ffffff !important;
-      font-weight: bold !important;
-    }
-    h2 {
-      color: #ffffff !important;
-      font-weight: bold !important;
-    }
-    /* Art Gallery Heading Animation */
     h2.gallery-title {
       font-size: 2.5rem;
       background: linear-gradient(45deg, #ff00ff, #00ffff, #ffff00);
@@ -96,6 +183,7 @@
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
+    /* Rest of the styles (gallery, cards, modals, etc.) remain unchanged */
     .btn-primary {
       background: linear-gradient(45deg, #ff00ff, #00ffff);
       border: none;
@@ -397,6 +485,18 @@
   </style>
 </head>
 <body>
+  <!-- Anime-Style Animated Background -->
+  <div class="anime-bg">
+    <div class="glow"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="wave"></div>
+    <div class="wave"></div>
+  </div>
+
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container">
