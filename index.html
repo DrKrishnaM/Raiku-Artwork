@@ -58,21 +58,31 @@
     .nav-link {
       color: #ffffff !important;
       font-weight: bold !important;
+      font-size: 1.2rem;
       position: relative;
-      transition: color 0.3s ease;
+      transition: color 0.3s ease, transform 0.3s ease;
+      background: linear-gradient(45deg, #00ffcc, #ff00ff, #ffeb3b); /* Cyan, Neon Pink, Bright Yellow */
+      background-size: 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: navGradientShift 3s ease-in-out infinite;
     }
     .nav-link::after {
       content: '';
       position: absolute;
       width: 0;
       height: 2px;
-      bottom: 0;
+      bottom: -5px;
       left: 0;
-      background-color: #ffff00;
+      background: linear-gradient(90deg, #00ffcc, #ff00ff);
       transition: width 0.3s ease;
     }
     .nav-link:hover::after {
       width: 100%;
+    }
+    .nav-link:hover {
+      transform: scale(1.1);
+      color: #ffffff !important;
     }
     h1, h5, p, label, button {
       color: #ffffff !important;
@@ -127,6 +137,11 @@
       100% { background-position: 0% 50%; }
     }
     @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes navGradientShift {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
@@ -563,6 +578,9 @@
       }
       .form-control, .form-select {
         padding: 8px;
+      }
+      .nav-link {
+        font-size: 1rem;
       }
     }
     @media (min-width: 992px) {
