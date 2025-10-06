@@ -9,11 +9,11 @@
   <style>
     body {
       background: #000000 url('https://github.com/krishna077272/raiku-image/raw/main/8e748128-2045-4ae7-9bae-51c5f97b6ca7%20(1).jpeg') no-repeat center center fixed;
-      background-size: 100% auto; /* Adjusted to fit width, maintain aspect ratio */
-      background-position: center; /* Keeps image centered */
-      -webkit-background-size: 100% auto; /* For Safari compatibility */
-      -moz-background-size: 100% auto; /* For Firefox compatibility */
-      -o-background-size: 100% auto; /* For Opera compatibility */
+      background-size: 100% auto;
+      background-position: center;
+      -webkit-background-size: 100% auto;
+      -moz-background-size: 100% auto;
+      -o-background-size: 100% auto;
       font-family: 'Poppins', sans-serif;
       color: #ffffff;
       font-weight: bold;
@@ -21,7 +21,6 @@
       min-height: 100vh;
       overflow-x: hidden;
     }
-    /* Removed old media query for background since it's now handled in body */
     .navbar {
       background: transparent;
       box-shadow: none;
@@ -82,7 +81,6 @@
       color: #ffffff !important;
       font-weight: bold !important;
     }
-    /* Art Gallery Heading Animation */
     h2.gallery-title {
       font-size: 2.5rem;
       background: linear-gradient(45deg, #ff00ff, #00ffff, #ffff00);
@@ -91,7 +89,6 @@
       -webkit-text-fill-color: transparent;
       animation: gradientShift 3s ease-in-out infinite;
     }
-    /* Animated Heading Styles */
     .home-heading {
       font-size: 2.5rem;
       background: linear-gradient(45deg, #ff4500, #00ff00, #ff00ff);
@@ -169,8 +166,8 @@
       transform: scale(1.1);
       box-shadow: 0 6px 12px rgba(255, 255, 255, 0.3);
     }
-    .home-btn { /* New class for home button */
-      background: linear-gradient(45deg, #ff4500, #00ff00, #ff00ff); /* Vibrant gradient */
+    .home-btn {
+      background: linear-gradient(45deg, #ff4500, #00ff00, #ff00ff);
       border: none;
       border-radius: 25px;
       padding: 12px 24px;
@@ -197,7 +194,7 @@
     .home-btn:hover {
       transform: scale(1.1);
       box-shadow: 0 8px 16px rgba(255, 255, 255, 0.4);
-      background-position: 100% 100%; /* Shift gradient on hover */
+      background-position: 100% 100%;
       animation: glow 1.5s infinite alternate;
     }
     .home-btn:active {
@@ -209,9 +206,45 @@
       transform: none;
       box-shadow: none;
     }
-    @keyframes glow {
-      0% { box-shadow: 0 0 5px #ff4500; }
-      100% { box-shadow: 0 0 20px #00ff00, 0 0 30px #ff00ff; }
+    .submit-btn { /* New class for submit button */
+      background: linear-gradient(45deg, #00ff00, #ff00ff, #00ffff);
+      border: none;
+      border-radius: 25px;
+      padding: 12px 24px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background-position 1.5s ease;
+      background-size: 200% 200%;
+    }
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+      transition: left 0.6s ease;
+    }
+    .submit-btn:hover::before {
+      left: 100%;
+    }
+    .submit-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 16px rgba(255, 255, 255, 0.4);
+      background-position: 100% 100%;
+      animation: glow 1.5s infinite alternate;
+    }
+    .submit-btn:active {
+      animation: pulse 0.3s;
+    }
+    .submit-btn:disabled {
+      background: linear-gradient(45deg, #666, #999);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
     }
     .section {
       padding: 50px 0;
@@ -293,7 +326,6 @@
     .btn-close {
       filter: invert(1);
     }
-    /* Success Modal */
     .success-modal .modal-content {
       background: linear-gradient(45deg, #ff00ff, #00ffff);
       border: none;
@@ -329,7 +361,6 @@
       padding: 12px 24px;
       font-size: 1.2rem;
     }
-    /* Fullscreen Art Modal */
     .fullscreen-modal .modal-dialog {
       max-width: 100%;
       margin: 0;
@@ -359,7 +390,6 @@
       right: 20px;
       z-index: 1000;
     }
-    /* Toast Notification */
     .toast-container {
       position: absolute;
       top: 10px;
@@ -367,11 +397,14 @@
       z-index: 1050;
     }
     .toast {
-      background: linear-gradient(45deg, #ff00ff, #00ffff);
+      background: linear-gradient(45deg, #ff4500, #00ff00, #ff00ff);
       color: #ffffff;
       font-weight: bold;
       border: none;
       border-radius: 10px;
+      padding: 10px 20px;
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+      animation: toastPop 0.5s ease-out, toastGlow 2s infinite alternate;
     }
     .toast-body {
       display: flex;
@@ -411,11 +444,19 @@
       50% { transform: scale(1.15); }
       to { transform: scale(1); }
     }
+    @keyframes toastPop {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes toastGlow {
+      0% { box-shadow: 0 4px 12px rgba(255, 69, 0, 0.5); }
+      100% { box-shadow: 0 4px 12px rgba(0, 255, 0, 0.5), 0 0 20px rgba(255, 0, 255, 0.5); }
+    }
     @media (max-width: 767px) {
       .gallery-card {
         margin-bottom: 20px;
       }
-      .btn-primary, .btn-danger, .home-btn {
+      .btn-primary, .btn-danger, .home-btn, .submit-btn {
         padding: 10px 20px;
         font-size: 1rem;
       }
@@ -495,8 +536,8 @@
   <!-- Home Section -->
   <section id="home" class="section text-center">
     <div class="container">
-      <h1 class="home-heading">Unleash Your Creativity!</h1> <!-- Updated to home-heading class -->
-      <p class="home-subheading">Join Our Vibrant Raiku Arts Community To Showcase And Discover Stunning Artworks.</p> <!-- Updated to home-subheading class -->
+      <h1 class="home-heading">Unleash Your Creativity!</h1>
+      <p class="home-subheading">Join Our Vibrant Raiku Arts Community To Showcase And Discover Stunning Artworks.</p>
       <button class="btn home-btn" data-bs-toggle="modal" data-bs-target="#uploadModal">Upload Your Art</button>
     </div>
   </section>
@@ -543,7 +584,7 @@
             <div class="mb-3"><label>Discord Username</label><input type="text" class="form-control" id="discordUsername" placeholder="User#1234" required></div>
             <div class="mb-3"><label>Upload Art (Images, GIFs, or Videos)</label><input type="file" class="form-control" id="artFile" accept="image/*,video/*,image/gif" multiple required></div>
             <div class="mb-3"><label>Description</label><textarea class="form-control" id="artDescription"></textarea></div>
-            <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
+            <button type="submit" class="btn submit-btn" id="submitButton">Submit</button> <!-- Updated to submit-btn class -->
           </form>
         </div>
       </div>
@@ -608,15 +649,12 @@
       return str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
     }
 
-    // Load gallery on start
     window.addEventListener('DOMContentLoaded', () => {
       checkAdminSession();
       loadGallery();
-      // Set default sort to newest first
       document.getElementById('sortFilter').value = 'descending';
     });
 
-    // Handle back button to restore scroll position
     window.addEventListener('popstate', () => {
       const fullscreenModal = bootstrap.Modal.getInstance(document.getElementById('fullscreenArtModal'));
       if (fullscreenModal) {
@@ -625,7 +663,6 @@
       }
     });
 
-    // Sort filter change
     document.getElementById('sortFilter').addEventListener('change', (e) => {
       console.log('Sort order changed:', e.target.value);
       loadGallery(e.target.value);
@@ -639,7 +676,6 @@
       }
     }
 
-    // Admin Login / Logout
     document.getElementById('adminLogin').addEventListener('click', async (e) => {
       e.preventDefault();
       if (isAdminLoggedIn) {
@@ -670,16 +706,13 @@
       }
     });
 
-    // Upload Art
     document.getElementById('artUploadForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      // Disable submit button and show loading state
       const submitButton = document.getElementById('submitButton');
       submitButton.disabled = true;
       submitButton.textContent = 'Submitting...';
 
-      // Show toast notification
       const toast = new bootstrap.Toast(document.getElementById('submitToast'));
       toast.show();
 
@@ -691,26 +724,20 @@
       const timestamp = Date.now();
 
       try {
-        // Upload files in parallel
         const uploadPromises = Array.from(artFiles).map(async (artFile, i) => {
           const fileName = `${timestamp}_${i}_${artFile.name}`;
           console.log(`Uploading file: ${fileName}`);
           const { error: uploadError } = await client.storage
             .from('artworks')
             .upload(fileName, artFile);
-          if (uploadError) {
-            throw new Error(`Upload failed for file ${artFile.name}: ${uploadError.message}`);
-          }
+          if (uploadError) throw new Error(`Upload failed for file ${artFile.name}: ${uploadError.message}`);
           const { data: urlData } = client.storage.from('artworks').getPublicUrl(fileName);
-          if (!urlData.publicUrl) {
-            throw new Error(`Failed to get public URL for file ${artFile.name}`);
-          }
+          if (!urlData.publicUrl) throw new Error(`Failed to get public URL for file ${artFile.name}`);
           return { fileUrl: urlData.publicUrl, fileName, fileType: artFile.type };
         });
 
         const uploadedFiles = await Promise.all(uploadPromises);
 
-        // Insert all files into the database with the same details
         const artworks = uploadedFiles.map(file => ({
           artistName: toTitleCase(artistName),
           xUsername,
@@ -721,18 +748,12 @@
           createdAt: new Date().toISOString()
         }));
 
-        const { error: dbError } = await client
-          .from('Artworks')
-          .insert(artworks);
-
+        const { error: dbError } = await client.from('Artworks').insert(artworks);
         if (dbError) {
-          await Promise.all(uploadedFiles.map(file => 
-            client.storage.from('artworks').remove([file.fileName])
-          ));
+          await Promise.all(uploadedFiles.map(file => client.storage.from('artworks').remove([file.fileName])));
           throw new Error('Database error: ' + dbError.message);
         }
 
-        // Show success modal
         const successModal = new bootstrap.Modal(document.getElementById('successModal'));
         const successMessage = document.getElementById('successMessage');
         successMessage.textContent = artFiles.length > 1 ? 'Boom! Your Arts are Live! ' : 'Boom! Your Art is Live! ';
@@ -751,7 +772,6 @@
       }
     });
 
-    // Load Gallery
     async function loadGallery(sortOrder = 'descending') {
       const container = document.getElementById('galleryContainer');
       const artCountElement = document.getElementById('artCount');
