@@ -113,6 +113,14 @@
       background-color: rgba(0, 0, 0, 0.7); /* Darker semi-transparent background */
       display: inline-block;
     }
+    .home-btn {
+      margin-top: 15px; /* Ensure button stays below subheading */
+      display: block; /* Ensure it takes full width on laptop and stacks properly */
+      width: auto;
+      max-width: 300px; /* Limit width for better centering on laptop */
+      margin-left: auto;
+      margin-right: auto;
+    }
     @keyframes gradientShift {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
@@ -590,7 +598,7 @@
   <section id="home" class="section text-center">
     <div class="container">
       <h1 class="home-heading">Unleash Your Creativity!</h1>
-      <p class="home-subheading">Join Our Vibrant Raiku Arts Community To Showcase And Discover Stunning Artworks.</p>
+      <p class="home-subheading">Join Our Vibrant Raiku Arts Community To Showcase And Discover Stunning Artworks!</p>
       <button class="btn home-btn" data-bs-toggle="modal" data-bs-target="#uploadModal">Upload Your Art</button>
     </div>
   </section>
