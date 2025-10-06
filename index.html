@@ -91,10 +91,34 @@
       -webkit-text-fill-color: transparent;
       animation: gradientShift 3s ease-in-out infinite;
     }
+    /* Animated Heading Styles */
+    .home-heading {
+      font-size: 2.5rem;
+      background: linear-gradient(45deg, #ff4500, #00ff00, #ff00ff);
+      background-size: 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientShift 3s ease-in-out infinite;
+      text-align: center;
+    }
+    .home-subheading {
+      font-size: 1.2rem;
+      background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00);
+      background-size: 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientShift 3s ease-in-out infinite, fadeInOut 2s ease-in-out infinite;
+      text-align: center;
+      margin: 10px 0;
+    }
     @keyframes gradientShift {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
+    }
+    @keyframes fadeInOut {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
     }
     .btn-primary {
       background: linear-gradient(45deg, #ff00ff, #00ffff);
@@ -427,6 +451,12 @@
       h2.gallery-title {
         font-size: 2rem;
       }
+      .home-heading {
+        font-size: 2rem;
+      }
+      .home-subheading {
+        font-size: 1rem;
+      }
     }
     @media (min-width: 992px) {
       .gallery-container .row {
@@ -465,9 +495,9 @@
   <!-- Home Section -->
   <section id="home" class="section text-center">
     <div class="container">
-      <h1>Unleash Your Creativity!</h1>
-      <p>Join Our Vibrant Raiku Arts Community To Showcase And Discover Stunning Artworks.</p>
-      <button class="btn home-btn" data-bs-toggle="modal" data-bs-target="#uploadModal">Upload Your Art</button> <!-- Updated class to home-btn -->
+      <h1 class="home-heading">Unleash Your Creativity!</h1> <!-- Updated to home-heading class -->
+      <p class="home-subheading">Join Our Vibrant Raiku Arts Community To Showcase And Discover Stunning Artworks.</p> <!-- Updated to home-subheading class -->
+      <button class="btn home-btn" data-bs-toggle="modal" data-bs-target="#uploadModal">Upload Your Art</button>
     </div>
   </section>
 
@@ -477,7 +507,7 @@
       <div class="row align-items-center justify-content-between mb-4">
         <div class="col-6">
           <h2 class="gallery-title">Art Gallery</h2>
-          <p id="artCount" class="mb-0">Total Arts: 0</p> <!-- Moved here, just below heading -->
+          <p id="artCount" class="mb-0">Total Arts: 0</p>
         </div>
         <div class="col-auto ms-auto text-end">
           <select id="sortFilter" class="form-select">
@@ -537,7 +567,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        <div id="fullscreenArtContent"></div> <!-- Updated to handle both img and video -->
+        <div id="fullscreenArtContent"></div>
       </div>
     </div>
   </div>
@@ -656,7 +686,7 @@
       const artistName = document.getElementById('artistName').value;
       const xUsername = document.getElementById('xUsername').value;
       const discordUsername = document.getElementById('discordUsername').value;
-      const artFiles = document.getElementById('artFile').files; // Updated from artImage to artFile
+      const artFiles = document.getElementById('artFile').files;
       const artDescription = document.getElementById('artDescription').value;
       const timestamp = Date.now();
 
@@ -687,7 +717,7 @@
           discordUsername,
           description: artDescription,
           fileUrl: file.fileUrl,
-          fileType: file.fileType, // Store file type to handle rendering
+          fileType: file.fileType,
           createdAt: new Date().toISOString()
         }));
 
@@ -696,7 +726,6 @@
           .insert(artworks);
 
         if (dbError) {
-          // Remove uploaded files if database insertion fails
           await Promise.all(uploadedFiles.map(file => 
             client.storage.from('artworks').remove([file.fileName])
           ));
@@ -716,7 +745,6 @@
       } catch (error) {
         alert(error.message);
       } finally {
-        // Re-enable submit button and hide toast
         submitButton.disabled = false;
         submitButton.textContent = 'Submit';
         toast.hide();
@@ -770,10 +798,8 @@
         container.appendChild(card);
       });
 
-      // Update art count
       artCountElement.textContent = `Total Arts: ${count || 0}`;
 
-      // Add click event for full-screen view
       document.querySelectorAll('.gallery-card').forEach(card => {
         card.addEventListener('click', (e) => {
           if (e.target.classList.contains('btn-danger')) return;
@@ -797,7 +823,6 @@
         });
       });
 
-      // Delete Button
       document.querySelectorAll('.btn-danger').forEach(btn => {
         btn.addEventListener('click', async (e) => {
           e.stopPropagation();
