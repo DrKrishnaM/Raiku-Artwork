@@ -433,6 +433,7 @@
       <div class="row align-items-center justify-content-between mb-4">
         <div class="col-6">
           <h2 class="gallery-title">Art Gallery</h2>
+          <p id="artCount" class="mb-0">Total Arts: 0</p> <!-- Moved here, just below heading -->
         </div>
         <div class="col-auto ms-auto text-end">
           <select id="sortFilter" class="form-select">
@@ -442,9 +443,6 @@
         </div>
       </div>
       <div class="row" id="galleryContainer"></div>
-      <div class="text-center mt-3">
-        <p id="artCount">Total Arts: 0</p> <!-- Count display added here -->
-      </div>
     </div>
   </section>
 
@@ -505,7 +503,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Admin Login</h5>
+          <h2 class="modal-title">Admin Login</h2>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
