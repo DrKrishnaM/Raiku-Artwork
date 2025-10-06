@@ -442,6 +442,9 @@
         </div>
       </div>
       <div class="row" id="galleryContainer"></div>
+      <div class="text-center mt-3">
+        <p id="artCount">Total Arts: 0</p> <!-- Count display added here -->
+      </div>
     </div>
   </section>
 
@@ -681,11 +684,12 @@
     // Load Gallery
     async function loadGallery(sortOrder = 'descending') {
       const container = document.getElementById('galleryContainer');
+      const artCountElement = document.getElementById('artCount');
       container.innerHTML = '<p>Loading...</p>';
 
-      const { data, error } = await client
+      const { data, error, count } = await client
         .from('Artworks')
-        .select('*')
+        .select('*', { count: 'exact' })
         .order('createdAt', { ascending: sortOrder === 'ascending' });
 
       if (error) {
@@ -695,6 +699,7 @@
 
       if (data.length === 0) {
         container.innerHTML = '<p>No artworks uploaded yet.</p>';
+        artCountElement.textContent = 'Total Arts: 0';
         return;
       }
 
@@ -722,6 +727,9 @@
         `;
         container.appendChild(card);
       });
+
+      // Update art count
+      artCountElement.textContent = `Total Arts: ${count || 0}`;
 
       // Add click event for full-screen view
       document.querySelectorAll('.gallery-card').forEach(card => {
