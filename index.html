@@ -38,11 +38,12 @@
       gap: 20px;
       font-weight: bold !important;
       font-size: 3rem !important;
-      background: linear-gradient(45deg, #ff4500, #ffff00, #00ff00);
+      background: linear-gradient(45deg, #ff00ff, #00ffff, #ff4500); /* Vibrant Neon Pink, Cyan, Orange */
       background-size: 200%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: gradientShift 3s ease-in-out infinite;
+      animation: brandGradientPulse 2s ease-in-out infinite;
+      text-shadow: 0 0 15px #ff00ff, 0 0 25px #00ffff; /* Intense glow */
     }
     .navbar-brand img {
       width: 72px;
@@ -83,47 +84,58 @@
     }
     h2.gallery-title {
       font-size: 2.5rem;
-      background: linear-gradient(45deg, #ff00ff, #00ffff, #ffff00);
+      background: linear-gradient(45deg, #ff00ff, #00ffff, #ff4500); /* Vibrant Neon Pink, Cyan, Orange */
       background-size: 200%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: gradientShift 3s ease-in-out infinite;
+      animation: galleryTitlePulse 2.5s ease-in-out infinite;
+      text-shadow: 0 0 20px #ff00ff, 0 0 30px #00ffff; /* Stronger glow */
     }
     .home-heading {
       font-size: 2.5rem;
-      background: linear-gradient(45deg, #ff4500, #00ff00, #ff00ff);
+      background: linear-gradient(45deg, #ff00ff, #00ffff, #ff4500); /* Vibrant Neon Pink, Cyan, Orange */
       background-size: 200%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: gradientShift 3s ease-in-out infinite;
-      text-align: center;
+      animation: homeHeadingPulse 2s ease-in-out infinite;
+      text-shadow: 0 0 20px #ff00ff, 0 0 30px #00ffff; /* Stronger glow */
     }
     .home-subheading {
       font-size: 1.2rem;
-      background: linear-gradient(45deg, #ff1493, #00ced1, #ffd700); /* New color scheme: DeepPink, DarkTurquoise, Gold */
+      background: linear-gradient(45deg, #ff1493, #00ced1, #ffd700); /* DeepPink, DarkTurquoise, Gold */
       background-size: 200%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: gradientWave 2.5s ease-in-out infinite; /* New animation */
+      animation: gradientWave 2.5s ease-in-out infinite;
       text-align: center;
       margin: 10px 0;
-      text-shadow: 0 0 15px rgba(255, 20, 147, 0.8), 0 0 25px rgba(0, 206, 209, 0.8); /* Enhanced glow */
+      text-shadow: 0 0 15px rgba(255, 20, 147, 0.8), 0 0 25px rgba(0, 206, 209, 0.8);
       padding: 8px 20px;
       border-radius: 15px;
-      background-color: rgba(0, 0, 0, 0.7); /* Darker semi-transparent background */
+      background-color: rgba(0, 0, 0, 0.7);
       display: inline-block;
     }
     .home-btn {
-      margin-top: 15px; /* Ensure button stays below subheading */
-      display: block; /* Ensure it takes full width on laptop and stacks properly */
+      margin-top: 15px;
+      display: block;
       width: auto;
-      max-width: 300px; /* Limit width for better centering on laptop */
+      max-width: 300px;
       margin-left: auto;
       margin-right: auto;
     }
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
+    @keyframes brandGradientPulse {
+      0% { background-position: 0% 50%; text-shadow: 0 0 10px #ff00ff; }
+      50% { background-position: 100% 50%; text-shadow: 0 0 30px #00ffff, 0 0 40px #ff4500; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes homeHeadingPulse {
+      0% { background-position: 0% 50%; text-shadow: 0 0 15px #ff00ff; }
+      50% { background-position: 100% 50%; text-shadow: 0 0 40px #00ffff, 0 0 50px #ff4500; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes galleryTitlePulse {
+      0% { background-position: 0% 50%; text-shadow: 0 0 15px #ff00ff; }
+      50% { background-position: 100% 50%; text-shadow: 0 0 40px #00ffff, 0 0 50px #ff4500; }
       100% { background-position: 0% 50%; }
     }
     @keyframes gradientWave {
