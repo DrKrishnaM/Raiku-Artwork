@@ -84,15 +84,16 @@
     }
     h2.gallery-title {
       font-size: 2.5rem;
-      background: linear-gradient(45deg, #ff4500, #00ff00, #ff00ff); /* Modified: Orange, Green, Pink */
+      background: linear-gradient(45deg, #00ffcc, #ff00ff, #ffeb3b); /* New: Cyan, Neon Pink, Bright Yellow */
       background-size: 200%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: gradientShift 3s ease-in-out infinite; /* Pehle wala animation */
+      animation: gradientShift 3s ease-in-out infinite; /* Pehle wala smooth animation */
+      text-shadow: 0 0 15px #00ffcc, 0 0 25px #ff00ff; /* Added glow for extra pop */
     }
     .home-heading {
       font-size: 2.5rem;
-      background: linear-gradient(45deg, #ff4500, #00ff00, #ff00ff); /* Modified: Orange, Green, Pink */
+      background: linear-gradient(45deg, #ff4500, #00ff00, #ff00ff); /* Orange, Green, Pink */
       background-size: 200%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -353,7 +354,7 @@
       transition: box-shadow 0.3s ease, transform 0.3s ease;
     }
     .form-control:focus, .form-select:focus {
-      box-shadow: 0 0 10px #00ffff;
+      box-shadow: 0 0 10px #00ffcc;
       transform: scale(1.02);
       outline: none;
     }
