@@ -8,7 +8,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
   <style>
     body {
-      background: #000000;
+      background: #000000 url('https://github.com/krishna077272/raiku-image/raw/main/8e748128-2045-4ae7-9bae-51c5f97b6ca7%20(1).jpeg') no-repeat center center fixed;
+      background-size: cover;
       font-family: 'Poppins', sans-serif;
       color: #ffffff;
       font-weight: bold;
@@ -16,12 +17,7 @@
       min-height: 100vh;
       overflow-x: hidden;
     }
-    @media (min-width: 992px) {
-      body {
-        background: url('https://github.com/krishna077272/raiku-image/raw/main/photo_2025-10-01_18-33-44.jpg') no-repeat center center fixed;
-        background-size: cover;
-      }
-    }
+    /* Removed old media query for background since it's now handled in body */
     .navbar {
       background: transparent;
       box-shadow: none;
@@ -237,7 +233,7 @@
       overflow: hidden;
     }
     .success-modal .modal-body::before {
-      content: '✔';
+      content: '';
       font-size: 50px;
       color: #ffffff;
       display: block;
@@ -480,7 +476,7 @@
     <div class="modal-dialog modal-sm">
       <div class="modal-content">
         <div class="modal-body">
-          <p id="successMessage">Boom! Your Art is Live! 🎨</p>
+          <p id="successMessage">Boom! Your Art is Live! </p>
           <button class="btn btn-primary" onclick="window.location.href='#gallery'">Check It Out</button>
         </div>
       </div>
@@ -660,7 +656,7 @@
         // Show success modal
         const successModal = new bootstrap.Modal(document.getElementById('successModal'));
         const successMessage = document.getElementById('successMessage');
-        successMessage.textContent = artImages.length > 1 ? 'Boom! Your Arts are Live! 🎨' : 'Boom! Your Art is Live! 🎨';
+        successMessage.textContent = artImages.length > 1 ? 'Boom! Your Arts are Live! ' : 'Boom! Your Art is Live! ';
         successModal.show();
         setTimeout(() => successModal.hide(), 3000);
 
