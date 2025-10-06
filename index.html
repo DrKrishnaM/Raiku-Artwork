@@ -173,13 +173,13 @@
       transform: translateY(-10px);
       box-shadow: 0 12px 24px rgba(255, 255, 255, 0.2);
     }
-    .gallery-card img {
+    .gallery-card img, .gallery-card video {
       width: 100%;
       height: 200px;
       object-fit: contain;
       transition: transform 0.3s ease;
     }
-    .gallery-card:hover img {
+    .gallery-card:hover img, .gallery-card:hover video {
       transform: scale(1.1);
     }
     .card-body {
@@ -280,7 +280,7 @@
       justify-content: center;
       position: relative;
     }
-    .fullscreen-modal img {
+    .fullscreen-modal img, .fullscreen-modal video {
       max-width: 90%;
       max-height: 90%;
       object-fit: contain;
@@ -358,7 +358,7 @@
         width: 56px;
         height: 56px;
       }
-      .gallery-card img {
+      .gallery-card img, .gallery-card video {
         height: 150px;
       }
       .card-body h5 {
@@ -466,7 +466,7 @@
             <div class="mb-3"><label>Artist Name</label><input type="text" class="form-control" id="artistName" required></div>
             <div class="mb-3"><label>X Username</label><input type="text" class="form-control" id="xUsername" placeholder="@username" required></div>
             <div class="mb-3"><label>Discord Username</label><input type="text" class="form-control" id="discordUsername" placeholder="User#1234" required></div>
-            <div class="mb-3"><label>Upload Image(s)</label><input type="file" class="form-control" id="artImage" accept="image/*" multiple required></div>
+            <div class="mb-3"><label>Upload Art (Images, GIFs, or Videos)</label><input type="file" class="form-control" id="artFile" accept="image/*,video/*,image/gif" multiple required></div>
             <div class="mb-3"><label>Description</label><textarea class="form-control" id="artDescription"></textarea></div>
             <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
           </form>
@@ -492,7 +492,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        <img id="fullscreenArtImage" src="" alt="Full-screen Art">
+        <div id="fullscreenArtContent"></div> <!-- Updated to handle both img and video -->
       </div>
     </div>
   </div>
@@ -611,37 +611,38 @@
       const artistName = document.getElementById('artistName').value;
       const xUsername = document.getElementById('xUsername').value;
       const discordUsername = document.getElementById('discordUsername').value;
-      const artImages = document.getElementById('artImage').files;
+      const artFiles = document.getElementById('artFile').files; // Updated from artImage to artFile
       const artDescription = document.getElementById('artDescription').value;
       const timestamp = Date.now();
 
       try {
-        // Upload images in parallel
-        const uploadPromises = Array.from(artImages).map(async (artImage, i) => {
-          const fileName = `${timestamp}_${i}_${artImage.name}`;
-          console.log(`Uploading image: ${fileName}`);
+        // Upload files in parallel
+        const uploadPromises = Array.from(artFiles).map(async (artFile, i) => {
+          const fileName = `${timestamp}_${i}_${artFile.name}`;
+          console.log(`Uploading file: ${fileName}`);
           const { error: uploadError } = await client.storage
             .from('artworks')
-            .upload(fileName, artImage);
+            .upload(fileName, artFile);
           if (uploadError) {
-            throw new Error(`Upload failed for image ${artImage.name}: ${uploadError.message}`);
+            throw new Error(`Upload failed for file ${artFile.name}: ${uploadError.message}`);
           }
           const { data: urlData } = client.storage.from('artworks').getPublicUrl(fileName);
           if (!urlData.publicUrl) {
-            throw new Error(`Failed to get public URL for image ${artImage.name}`);
+            throw new Error(`Failed to get public URL for file ${artFile.name}`);
           }
-          return { imageUrl: urlData.publicUrl, fileName };
+          return { fileUrl: urlData.publicUrl, fileName, fileType: artFile.type };
         });
 
-        const uploadedImages = await Promise.all(uploadPromises);
+        const uploadedFiles = await Promise.all(uploadPromises);
 
-        // Insert all images into the database with the same details
-        const artworks = uploadedImages.map(image => ({
+        // Insert all files into the database with the same details
+        const artworks = uploadedFiles.map(file => ({
           artistName: toTitleCase(artistName),
           xUsername,
           discordUsername,
           description: artDescription,
-          imageUrl: image.imageUrl,
+          fileUrl: file.fileUrl,
+          fileType: file.fileType, // Store file type to handle rendering
           createdAt: new Date().toISOString()
         }));
 
@@ -650,9 +651,9 @@
           .insert(artworks);
 
         if (dbError) {
-          // Remove uploaded images if database insertion fails
-          await Promise.all(uploadedImages.map(image => 
-            client.storage.from('artworks').remove([image.fileName])
+          // Remove uploaded files if database insertion fails
+          await Promise.all(uploadedFiles.map(file => 
+            client.storage.from('artworks').remove([file.fileName])
           ));
           throw new Error('Database error: ' + dbError.message);
         }
@@ -660,7 +661,7 @@
         // Show success modal
         const successModal = new bootstrap.Modal(document.getElementById('successModal'));
         const successMessage = document.getElementById('successMessage');
-        successMessage.textContent = artImages.length > 1 ? 'Boom! Your Arts are Live! ' : 'Boom! Your Art is Live! ';
+        successMessage.textContent = artFiles.length > 1 ? 'Boom! Your Arts are Live! ' : 'Boom! Your Art is Live! ';
         successModal.show();
         setTimeout(() => successModal.hide(), 3000);
 
@@ -699,21 +700,23 @@
 
       container.innerHTML = '';
       data.forEach((art, index) => {
-        console.log('Art image URL:', art.imageUrl);
+        console.log('Art file URL:', art.fileUrl, 'Type:', art.fileType);
         const card = document.createElement('div');
         card.className = 'col-lg-3 col-md-6 col-sm-6 mb-4';
         card.style.setProperty('--i', index);
         card.innerHTML = `
-          <div class="card gallery-card" data-image="${art.imageUrl || ''}">
-            ${art.imageUrl ? 
-              `<img src="${art.imageUrl}" class="card-img-top" style="height: 200px; object-fit: contain;" onerror="this.src='https://via.placeholder.com/200x200?text=Image+Not+Found';">` : 
-              `<div style="height: 200px; background: #333; display: flex; align-items: center; justify-content: center;">Image Not Found</div>`}
+          <div class="card gallery-card" data-file="${art.fileUrl || ''}" data-type="${art.fileType || ''}">
+            ${art.fileType && art.fileType.startsWith('image/') ? 
+              `<img src="${art.fileUrl}" class="card-img-top" style="height: 200px; object-fit: contain;" onerror="this.src='https://via.placeholder.com/200x200?text=Image+Not+Found';">` : 
+              art.fileType && (art.fileType === 'image/gif' || art.fileType.startsWith('video/')) ? 
+              `<video src="${art.fileUrl}" class="card-img-top" style="height: 200px; object-fit: contain;" autoplay loop muted playsinline></video>` : 
+              `<div style="height: 200px; background: #333; display: flex; align-items: center; justify-content: center;">Unsupported Format</div>`}
             <div class="card-body">
               <h5>${art.artistName}</h5>
               <p>X: ${art.xUsername}</p>
-              <p>DC: ${art.discordUsername}</p> <!-- Changed "Discord" to "DC" -->
+              <p>DC: ${art.discordUsername}</p>
               ${art.description ? `<p>${art.description}</p>` : ''}
-              ${isAdminLoggedIn ? `<button class="btn btn-danger btn-sm" data-id="${art.id}" data-url="${art.imageUrl || ''}">Delete</button>` : ''}
+              ${isAdminLoggedIn ? `<button class="btn btn-danger btn-sm" data-id="${art.id}" data-url="${art.fileUrl || ''}">Delete</button>` : ''}
             </div>
           </div>
         `;
@@ -726,9 +729,17 @@
           if (e.target.classList.contains('btn-danger')) return;
 
           lastScrollPosition = window.scrollY;
-          const imageUrl = card.getAttribute('data-image');
-          if (imageUrl) {
-            document.getElementById('fullscreenArtImage').src = imageUrl;
+          const fileUrl = card.getAttribute('data-file');
+          const fileType = card.getAttribute('data-type');
+          const fullscreenContent = document.getElementById('fullscreenArtContent');
+          fullscreenContent.innerHTML = '';
+
+          if (fileUrl) {
+            if (fileType && fileType.startsWith('image/')) {
+              fullscreenContent.innerHTML = `<img src="${fileUrl}" alt="Full-screen Art">`;
+            } else if (fileType && (fileType === 'image/gif' || fileType.startsWith('video/'))) {
+              fullscreenContent.innerHTML = `<video src="${fileUrl}" controls autoplay loop playsinline></video>`;
+            }
             const fullscreenModal = new bootstrap.Modal(document.getElementById('fullscreenArtModal'));
             fullscreenModal.show();
             window.history.pushState({ modal: 'fullscreen' }, '', '#fullscreen');
@@ -741,11 +752,11 @@
         btn.addEventListener('click', async (e) => {
           e.stopPropagation();
           const id = btn.getAttribute('data-id');
-          const imagePath = btn.getAttribute('data-url').split('/').pop();
+          const filePath = btn.getAttribute('data-url').split('/').pop();
 
           await client.from('Artworks').delete().eq('id', id);
-          if (imagePath) {
-            await client.storage.from('artworks').remove([imagePath]);
+          if (filePath) {
+            await client.storage.from('artworks').remove([filePath]);
           }
 
           alert('Deleted!');
