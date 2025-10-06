@@ -206,7 +206,7 @@
       transform: none;
       box-shadow: none;
     }
-    .submit-btn { /* New class for submit button */
+    .submit-btn {
       background: linear-gradient(45deg, #00ff00, #ff00ff, #00ffff);
       border: none;
       border-radius: 25px;
@@ -295,20 +295,43 @@
       margin-bottom: 5px;
     }
     .modal-content {
-      background: #000000;
+      background: linear-gradient(135deg, #1a001a, #000033); /* Gradient background */
       border-radius: 15px;
       transform: scale(0.7);
       opacity: 0;
       transition: all 0.3s ease;
+      border: 2px solid #00ffff;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+      animation: modalPulse 2s infinite alternate;
     }
     .modal.show .modal-content {
       transform: scale(1);
       opacity: 1;
     }
+    .form-label {
+      font-size: 1.1rem;
+      background: linear-gradient(45deg, #ff00ff, #00ffff);
+      background-size: 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientShift 3s ease-in-out infinite;
+      transition: transform 0.3s ease;
+    }
+    .form-label:hover {
+      transform: scale(1.05);
+    }
     .form-control, .form-select {
-      background: #333333;
+      background: rgba(255, 255, 255, 0.1);
       color: #ffffff;
-      border: none;
+      border: 1px solid #00ffff;
+      border-radius: 10px;
+      padding: 10px;
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+    .form-control:focus, .form-select:focus {
+      box-shadow: 0 0 10px #00ffff;
+      transform: scale(1.02);
+      outline: none;
     }
     .form-control::placeholder, .form-select::placeholder {
       color: #cccccc;
@@ -452,6 +475,10 @@
       0% { box-shadow: 0 4px 12px rgba(255, 69, 0, 0.5); }
       100% { box-shadow: 0 4px 12px rgba(0, 255, 0, 0.5), 0 0 20px rgba(255, 0, 255, 0.5); }
     }
+    @keyframes modalPulse {
+      0% { box-shadow: 0 0 10px rgba(0, 255, 255, 0.5); }
+      100% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.8), 0 0 30px rgba(255, 0, 255, 0.5); }
+    }
     @media (max-width: 767px) {
       .gallery-card {
         margin-bottom: 20px;
@@ -497,6 +524,12 @@
       }
       .home-subheading {
         font-size: 1rem;
+      }
+      .form-label {
+        font-size: 1rem;
+      }
+      .form-control, .form-select {
+        padding: 8px;
       }
     }
     @media (min-width: 992px) {
@@ -566,7 +599,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Submit Your Masterpiece</h5>
+          <h5 class="modal-title" style="background: linear-gradient(45deg, #ff00ff, #00ffff); background-size: 200%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradientShift 3s ease-in-out infinite;">Submit Your Masterpiece</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
@@ -579,12 +612,12 @@
             </div>
           </div>
           <form id="artUploadForm">
-            <div class="mb-3"><label>Artist Name</label><input type="text" class="form-control" id="artistName" required></div>
-            <div class="mb-3"><label>X Username</label><input type="text" class="form-control" id="xUsername" placeholder="@username" required></div>
-            <div class="mb-3"><label>Discord Username</label><input type="text" class="form-control" id="discordUsername" placeholder="User#1234" required></div>
-            <div class="mb-3"><label>Upload Art (Images, GIFs, or Videos)</label><input type="file" class="form-control" id="artFile" accept="image/*,video/*,image/gif" multiple required></div>
-            <div class="mb-3"><label>Description</label><textarea class="form-control" id="artDescription"></textarea></div>
-            <button type="submit" class="btn submit-btn" id="submitButton">Submit</button> <!-- Updated to submit-btn class -->
+            <div class="mb-3"><label class="form-label">Artist Name</label><input type="text" class="form-control" id="artistName" required></div>
+            <div class="mb-3"><label class="form-label">X Username</label><input type="text" class="form-control" id="xUsername" placeholder="@username" required></div>
+            <div class="mb-3"><label class="form-label">Discord Username</label><input type="text" class="form-control" id="discordUsername" placeholder="User#1234" required></div>
+            <div class="mb-3"><label class="form-label">Upload Art (Images, GIFs, or Videos)</label><input type="file" class="form-control" id="artFile" accept="image/*,video/*,image/gif" multiple required></div>
+            <div class="mb-3"><label class="form-label">Description</label><textarea class="form-control" id="artDescription"></textarea></div>
+            <button type="submit" class="btn submit-btn" id="submitButton">Submit</button>
           </form>
         </div>
       </div>
@@ -636,7 +669,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // Supabase Setup
     const supabaseUrl = 'https://tovaitbkfvviyqyzguze.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvdmFpdGJrZnZ2aXlxeXpndXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0MTI5MjIsImV4cCI6MjA3NDk4ODkyMn0.dUByWl_YW4uJi_iWGkUgQGcNCr3FSNda5rhC-rd5Sy8';
     const client = supabase.createClient(supabaseUrl, supabaseKey);
