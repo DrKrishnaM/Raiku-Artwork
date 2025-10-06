@@ -738,13 +738,24 @@
       document.getElementById('sortFilter').value = 'descending';
     });
 
+    // Handle back button and modal close to stop video/audio
     window.addEventListener('popstate', () => {
       const fullscreenModal = bootstrap.Modal.getInstance(document.getElementById('fullscreenArtModal'));
       if (fullscreenModal) {
+        stopVideoPlayback();
         fullscreenModal.hide();
         window.scrollTo(0, lastScrollPosition);
       }
     });
+
+    // Stop video playback function
+    function stopVideoPlayback() {
+      const video = document.querySelector('#fullscreenArtContent video');
+      if (video) {
+        video.pause();
+        video.currentTime = 0; // Reset video to start
+      }
+    }
 
     document.getElementById('sortFilter').addEventListener('change', (e) => {
       console.log('Sort order changed:', e.target.value);
@@ -942,6 +953,11 @@
         });
       });
     }
+
+    // Handle modal close event to stop video/audio
+    document.getElementById('fullscreenArtModal').addEventListener('hidden.bs.modal', function () {
+      stopVideoPlayback();
+    });
   </script>
 </body>
 </html>
