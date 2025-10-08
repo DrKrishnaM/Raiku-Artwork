@@ -38,12 +38,12 @@
       gap: 20px;
       font-weight: bold !important;
       font-size: 3rem !important;
-      background: linear-gradient(45deg, #FFD700, #C0C0C0, #FFFF00); /* Golden, Silver, Yellow */
+      background: linear-gradient(45deg, #FFD700, #C0C0C0, #FFFF00);
       background-size: 200%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: brandGradientPulse 2s ease-in-out infinite;
-      text-shadow: 0 0 15px #FFD700, 0 0 25px #FFFF00; /* Intense glow */
+      text-shadow: 0 0 15px #FFD700, 0 0 25px #FFFF00;
     }
     .navbar-brand img {
       width: 72px;
@@ -61,7 +61,7 @@
       font-size: 1.2rem;
       position: relative;
       transition: color 0.3s ease, transform 0.3s ease;
-      background: linear-gradient(45deg, #ff1493, #00ced1, #ffd700); /* DeepPink, DarkTurquoise, Gold */
+      background: linear-gradient(45deg, #ff1493, #00ced1, #ffd700);
       background-size: 200%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -94,23 +94,23 @@
     }
     h2.gallery-title {
       font-size: 2.5rem;
-      background: linear-gradient(45deg, #00ffcc, #ff00ff, #ffeb3b); /* Cyan, Neon Pink, Bright Yellow */
+      background: linear-gradient(45deg, #00ffcc, #ff00ff, #ffeb3b);
       background-size: 200%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: gradientShift 3s ease-in-out infinite; /* Smooth animation */
+      animation: gradientShift 3s ease-in-out infinite;
     }
     .home-heading {
       font-size: 2.5rem;
-      background: linear-gradient(45deg, #ffff00, #00ff00, #ff00ff); /* Yellow, Green, Pink */
-      background-size: 200% 200%; /* Equal distribution */
+      background: linear-gradient(45deg, #ffff00, #00ff00, #ff00ff);
+      background-size: 200% 200%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: gradientShift 3s ease-in-out infinite; /* Pehle wala animation */
+      animation: gradientShift 3s ease-in-out infinite;
     }
     .home-subheading {
       font-size: 1.2rem;
-      background: linear-gradient(45deg, #ff1493, #00ced1, #ffd700); /* DeepPink, DarkTurquoise, Gold */
+      background: linear-gradient(45deg, #ff1493, #00ced1, #ffd700);
       background-size: 200%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -299,7 +299,7 @@
     }
     .gallery-card {
       transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
-      background: rgba(255, 255, 255, 0.3); /* Increased opacity from 0.1 to 0.3 */
+      background: rgba(255, 255, 255, 0.3);
       border-radius: 10px;
       overflow: hidden;
       opacity: 0;
@@ -308,7 +308,7 @@
       text-align: center;
       cursor: pointer;
       padding: 10px;
-      backdrop-filter: blur(5px); /* Optional: Adds slight blur for better contrast */
+      backdrop-filter: blur(5px);
     }
     .gallery-card:hover {
       transform: translateY(-10px);
@@ -319,6 +319,7 @@
       height: 200px;
       object-fit: contain;
       transition: transform 0.3s ease;
+      loading: lazy; /* Lazy loading for images/videos */
     }
     .gallery-card:hover img, .gallery-card:hover video {
       transform: scale(1.1);
@@ -728,6 +729,7 @@
     const adminEmail = 'krrishmuley@gmail.com';
     let isAdminLoggedIn = false;
     let lastScrollPosition = 0;
+    let isSubmitting = false; // Debounce flag
 
     function toTitleCase(str) {
       return str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
@@ -764,21 +766,25 @@
     });
 
     async function checkAdminSession() {
+      console.time('checkAdminSession');
       const { data: { session } } = await client.auth.getSession();
       if (session?.user.email === adminEmail) {
         isAdminLoggedIn = true;
         document.getElementById('adminLogin').innerText = 'Admin Logout';
       }
+      console.timeEnd('checkAdminSession');
     }
 
     document.getElementById('adminLogin').addEventListener('click', async (e) => {
       e.preventDefault();
       if (isAdminLoggedIn) {
+        console.time('adminLogout');
         await client.auth.signOut();
         isAdminLoggedIn = false;
         alert('Admin logged out.');
         document.getElementById('adminLogin').innerText = 'Admin Login';
         loadGallery();
+        console.timeEnd('adminLogout');
       } else {
         new bootstrap.Modal(document.getElementById('adminLoginModal')).show();
       }
@@ -786,10 +792,14 @@
 
     document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      console.time('adminLogin');
       const email = document.getElementById('adminEmail').value;
       const password = document.getElementById('adminPassword').value;
       const { data, error } = await client.auth.signInWithPassword({ email, password });
-      if (error) return alert('Login failed: ' + error.message);
+      if (error) {
+        console.error('Admin login error:', error);
+        return alert('Login failed: ' + error.message);
+      }
       if (email === adminEmail) {
         isAdminLoggedIn = true;
         alert('Admin Logged In!');
@@ -799,10 +809,13 @@
       } else {
         alert('Only admin is allowed!');
       }
+      console.timeEnd('adminLogin');
     });
 
     document.getElementById('artUploadForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (isSubmitting) return; // Prevent multiple submissions
+      isSubmitting = true;
 
       const submitButton = document.getElementById('submitButton');
       submitButton.disabled = true;
@@ -812,16 +825,25 @@
       toast.show();
 
       const artistName = document.getElementById('artistName').value;
-      const xUsername = document.getElementById('xUsername').value || ''; // Handle empty optional field
-      const discordUsername = document.getElementById('discordUsername').value || ''; // Handle empty optional field
+      const xUsername = document.getElementById('xUsername').value || '';
+      const discordUsername = document.getElementById('discordUsername').value || '';
       const artFiles = document.getElementById('artFile').files;
-      const artDescription = document.getElementById('artDescription').value || ''; // Handle empty optional field
+      const artDescription = document.getElementById('artDescription').value || '';
       const timestamp = Date.now();
 
+      console.time('fileUpload');
       try {
+        // Validate file types
+        const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/webm'];
+        for (let file of artFiles) {
+          if (!validTypes.includes(file.type)) {
+            throw new Error(`Invalid file type for ${file.name}. Only images (JPEG, PNG, GIF) and videos (MP4, WebM) are allowed.`);
+          }
+        }
+
         const uploadPromises = Array.from(artFiles).map(async (artFile, i) => {
           const fileName = `${timestamp}_${i}_${artFile.name}`;
-          console.log(`Uploading file: ${fileName}`);
+          console.log(`Uploading file: ${fileName}, Size: ${(artFile.size / 1024 / 1024).toFixed(2)} MB`);
           const { error: uploadError } = await client.storage
             .from('artworks')
             .upload(fileName, artFile);
@@ -832,7 +854,9 @@
         });
 
         const uploadedFiles = await Promise.all(uploadPromises);
+        console.timeEnd('fileUpload');
 
+        console.time('dbInsert');
         const artworks = uploadedFiles.map(file => ({
           artistName: toTitleCase(artistName),
           xUsername,
@@ -845,9 +869,11 @@
 
         const { error: dbError } = await client.from('Artworks').insert(artworks);
         if (dbError) {
+          console.error('Database error:', dbError);
           await Promise.all(uploadedFiles.map(file => client.storage.from('artworks').remove([file.fileName])));
           throw new Error('Database error: ' + dbError.message);
         }
+        console.timeEnd('dbInsert');
 
         const successModal = new bootstrap.Modal(document.getElementById('successModal'));
         const successMessage = document.getElementById('successMessage');
@@ -859,15 +885,18 @@
         bootstrap.Modal.getInstance(document.getElementById('uploadModal')).hide();
         loadGallery();
       } catch (error) {
+        console.error('Upload error:', error);
         alert(error.message);
       } finally {
         submitButton.disabled = false;
         submitButton.textContent = 'Submit';
         toast.hide();
+        isSubmitting = false;
       }
     });
 
     async function loadGallery(sortOrder = 'descending') {
+      console.time('loadGallery');
       const container = document.getElementById('galleryContainer');
       const artCountElement = document.getElementById('artCount');
       container.innerHTML = '<p>Loading...</p>';
@@ -879,12 +908,15 @@
 
       if (error) {
         console.error('Gallery load error:', error);
-        return container.innerHTML = '<p>Error loading gallery.</p>';
+        container.innerHTML = '<p>Error loading gallery.</p>';
+        console.timeEnd('loadGallery');
+        return;
       }
 
       if (data.length === 0) {
         container.innerHTML = '<p>No artworks uploaded yet.</p>';
         artCountElement.textContent = 'Total Arts: 0';
+        console.timeEnd('loadGallery');
         return;
       }
 
@@ -897,14 +929,14 @@
         card.innerHTML = `
           <div class="card gallery-card" data-file="${art.fileUrl || ''}" data-type="${art.fileType || ''}">
             ${art.fileType && art.fileType.startsWith('image/') ? 
-              `<img src="${art.fileUrl}" class="card-img-top" style="height: 200px; object-fit: contain;" onerror="this.src='https://via.placeholder.com/200x200?text=Image+Not+Found';">` : 
+              `<img src="${art.fileUrl}" class="card-img-top" style="height: 200px; object-fit: contain;" loading="lazy" onerror="this.src='https://via.placeholder.com/200x200?text=Image+Not+Found';">` : 
               art.fileType && (art.fileType === 'image/gif' || art.fileType.startsWith('video/')) ? 
-              `<video src="${art.fileUrl}" class="card-img-top" style="height: 200px; object-fit: contain;" autoplay loop muted playsinline></video>` : 
+              `<video src="${art.fileUrl}" class="card-img-top" style="height: 200px; object-fit: contain;" loading="lazy" autoplay loop muted playsinline></video>` : 
               `<div style="height: 200px; background: #333; display: flex; align-items: center; justify-content: center;">Unsupported Format</div>`}
             <div class="card-body">
               <h5>${art.artistName}</h5>
-              <p>X: ${art.xUsername}</p>
-              <p>DC: ${art.discordUsername}</p>
+              ${art.xUsername ? `<p>X: ${art.xUsername}</p>` : ''}
+              ${art.discordUsername ? `<p>DC: ${art.discordUsername}</p>` : ''}
               ${art.description ? `<p>${art.description}</p>` : ''}
               ${isAdminLoggedIn ? `<button class="btn btn-danger btn-sm" data-id="${art.id}" data-url="${art.fileUrl || ''}">Delete</button>` : ''}
             </div>
@@ -941,6 +973,7 @@
       document.querySelectorAll('.btn-danger').forEach(btn => {
         btn.addEventListener('click', async (e) => {
           e.stopPropagation();
+          console.time('deleteArt');
           const id = btn.getAttribute('data-id');
           const filePath = btn.getAttribute('data-url').split('/').pop();
 
@@ -951,8 +984,11 @@
 
           alert('Deleted!');
           loadGallery(document.getElementById('sortFilter').value);
+          console.timeEnd('deleteArt');
         });
       });
+
+      console.timeEnd('loadGallery');
     }
 
     // Handle modal close event to stop video/audio
