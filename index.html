@@ -307,10 +307,11 @@
       animation-delay: calc(var(--i) * 0.1s);
       text-align: center;
       cursor: pointer;
-      padding: 0; /* Changed from 10px to 0 to remove extra space */
+      padding: 0;
       backdrop-filter: blur(5px);
-      width: fit-content; /* Card size adjusts to content */
-      margin: 0 auto; /* Center the card */
+      width: fit-content;
+      margin: 0 auto;
+      max-width: 300px; /* Added to constrain card width */
     }
     .gallery-card:hover {
       transform: translateY(-10px);
@@ -327,7 +328,7 @@
       transform: scale(1.1);
     }
     .card-body {
-      padding: 5px; /* Changed from 10px to 5px for minimal spacing */
+      padding: 5px;
     }
     .card-body h5 {
       font-size: 1.25rem;
@@ -534,17 +535,25 @@
     .gallery-container .row {
       display: flex;
       flex-wrap: wrap;
-      justify-content: center; /* Center cards */
-      gap: 15px; /* Space between cards */
+      justify-content: center;
+      gap: 15px;
     }
     .gallery-container .card-col {
-      flex: 0 0 auto; /* Remove fixed width */
-      width: auto; /* Adjust to content */
-      margin-bottom: 15px; /* Consistent spacing */
+      flex: 0 0 auto;
+      width: auto;
+      margin-bottom: 15px;
     }
     @media (max-width: 767px) {
       .gallery-card {
         margin-bottom: 20px;
+        max-width: 200px; /* Constrain card width for mobile */
+      }
+      .gallery-container .card-col {
+        flex: 0 0 calc(50% - 7.5px); /* 2 cards per row, accounting for 15px gap */
+        width: auto;
+      }
+      .gallery-container .card-col:has(.gallery-card.wide-card) {
+        flex: 0 0 100%; /* Single card per row if wide */
       }
       .btn-primary, .btn-danger, .home-btn, .submit-btn {
         padding: 10px 20px;
@@ -704,7 +713,7 @@
         </div>
         <div class="modal-body">
           <form id="adminLoginForm">
-            <div class="mb-3"><label>Email</label><input type="email" class="form-control" id="adminEmail" placeholder="Enter your email" required></div>
+            <div class="mb-3"><label>Email</label><input type="text" class="form-control" id="adminEmail" placeholder="Enter your email" required></div>
             <div class="mb-3"><label>Password</label><input type="password" class="form-control" id="adminPassword" required></div>
             <button type="submit" class="btn btn-primary">Login</button>
           </form>
@@ -919,10 +928,11 @@
       data.forEach((art, index) => {
         console.log('Art file URL:', art.fileUrl, 'Type:', art.fileType);
         const card = document.createElement('div');
-        card.className = 'card-col'; /* Changed from col-lg-3 col-md-6 col-sm-6 mb-4 */
+        card.className = 'card-col';
         card.style.setProperty('--i', index);
+        const isWide = (art.artistName.length > 20 || (art.xUsername && art.xUsername.length > 20) || (art.discordUsername && art.discordUsername.length > 20) || (art.description && art.description.length > 30));
         card.innerHTML = `
-          <div class="card gallery-card" data-file="${art.fileUrl || ''}" data-type="${art.fileType || ''}">
+          <div class="card gallery-card ${isWide ? 'wide-card' : ''}" data-file="${art.fileUrl || ''}" data-type="${art.fileType || ''}">
             ${art.fileType && art.fileType.startsWith('image/') ? 
               `<img src="${art.fileUrl}" class="card-img-top" style="height: 200px; object-fit: contain;" loading="lazy" onerror="this.src='https://via.placeholder.com/200x200?text=Image+Not+Found';">` : 
               art.fileType && (art.fileType === 'image/gif' || art.fileType.startsWith('video/')) ? 
