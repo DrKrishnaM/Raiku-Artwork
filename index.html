@@ -332,14 +332,18 @@
     .card-body h5 {
       font-size: 1.5rem; /* Desktop font size */
       margin-bottom: 3px; /* Reduced margin */
-      white-space: normal; /* Allow text wrapping */
-      word-wrap: break-word; /* Break long words */
+      white-space: nowrap; /* Single line */
+      overflow: hidden; /* Hide overflow */
+      text-overflow: ellipsis; /* Ellipsis for overflow */
+      max-width: 300px; /* Constrain width */
     }
     .card-body p {
       font-size: 1.3rem; /* Desktop font size */
       margin-bottom: 3px; /* Reduced margin */
-      white-space: normal; /* Allow text wrapping */
-      word-wrap: break-word; /* Break long words */
+      white-space: nowrap; /* Single line */
+      overflow: hidden; /* Hide overflow */
+      text-overflow: ellipsis; /* Ellipsis for overflow */
+      max-width: 300px; /* Constrain width */
     }
     .modal-content {
       background: linear-gradient(135deg, #1a001a, #000033);
@@ -447,20 +451,21 @@
       width: 100%;
       height: 100%;
       margin: 0;
-      padding: 0;
+      padding: 10px; /* Minimal padding to avoid edge cutting */
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
-      overflow: auto; /* Allow scrolling if content overflows */
+      overflow: auto; /* Allow scrolling if needed */
     }
     .fullscreen-modal img, .fullscreen-modal video {
-      max-width: 100%; /* Full width */
-      max-height: 100%; /* Full height */
+      max-width: 100%;
+      max-height: 100%;
       width: auto;
       height: auto;
       object-fit: contain; /* Maintain aspect ratio */
       margin: 0 auto; /* Center horizontally */
+      transform: none; /* Remove any zoom */
     }
     .fullscreen-modal .btn-close {
       position: absolute;
@@ -573,16 +578,18 @@
         height: 56px;
       }
       .gallery-card img, .gallery-card video {
-        height: 150px; /* Original mobile height */
+        height: 150px; /* Mobile height */
       }
       .card-body h5 {
-        font-size: 1.1rem; /* Original mobile font size */
+        font-size: 1.1rem; /* Mobile font size */
+        max-width: 200px; /* Constrain width for mobile */
       }
       .card-body p {
-        font-size: 1rem; /* Original mobile font size */
+        font-size: 1rem; /* Mobile font size */
+        max-width: 200px; /* Constrain width for mobile */
       }
       .gallery-container .row {
-        gap: 10px; /* Slightly smaller gap for mobile */
+        gap: 10px; /* Smaller gap for mobile */
       }
       .form-select {
         font-size: 0.9rem;
@@ -613,6 +620,7 @@
         width: auto;
         height: auto;
         object-fit: contain;
+        transform: none; /* Remove any zoom */
       }
     }
     @media (min-width: 992px) {
@@ -986,9 +994,9 @@
 
           if (fileUrl) {
             if (fileType && fileType.startsWith('image/')) {
-              fullscreenContent.innerHTML = `<img src="${fileUrl}" alt="Full-screen Art" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
+              fullscreenContent.innerHTML = `<img src="${fileUrl}" alt="Full-screen Art" style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; transform: none;">`;
             } else if (fileType && (fileType === 'image/gif' || fileType.startsWith('video/'))) {
-              fullscreenContent.innerHTML = `<video src="${fileUrl}" controls autoplay loop playsinline style="max-width: 100%; max-height: 100%; object-fit: contain;"></video>`;
+              fullscreenContent.innerHTML = `<video src="${fileUrl}" controls autoplay loop playsinline style="max-width: 80%; max-height: 80%; width: auto; height: auto; object-fit: contain; transform: none;"></video>`;
             }
             const fullscreenModal = new bootstrap.Modal(document.getElementById('fullscreenArtModal'));
             fullscreenModal.show();
