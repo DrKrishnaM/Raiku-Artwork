@@ -300,7 +300,6 @@
     .gallery-card {
       transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
       background: rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(5px);
       border-radius: 10px;
       overflow: hidden;
       opacity: 0;
@@ -308,9 +307,7 @@
       animation-delay: calc(var(--i) * 0.1s);
       text-align: center;
       cursor: pointer;
-      padding: 5px; /* Minimal padding */
-      width: fit-content; /* Card width adjusts to content */
-      margin: 0 auto; /* Center the card */
+      padding: 15px; /* Increased padding for desktop */
     }
     .gallery-card:hover {
       transform: translateY(-10px);
@@ -318,7 +315,7 @@
     }
     .gallery-card img, .gallery-card video {
       width: 100%;
-      height: 250px; /* Desktop height */
+      height: 250px; /* Increased for desktop */
       object-fit: contain;
       transition: transform 0.3s ease;
       loading: lazy;
@@ -327,23 +324,15 @@
       transform: scale(1.1);
     }
     .card-body {
-      padding: 5px; /* Minimal padding */
+      padding: 10px;
     }
     .card-body h5 {
-      font-size: 1.5rem; /* Desktop font size */
-      margin-bottom: 3px; /* Reduced margin */
-      white-space: nowrap; /* Single line */
-      overflow: hidden; /* Hide overflow */
-      text-overflow: ellipsis; /* Ellipsis for overflow */
-      max-width: 300px; /* Constrain width */
+      font-size: 1.5rem; /* Increased for desktop */
+      margin-bottom: 5px;
     }
     .card-body p {
-      font-size: 1.3rem; /* Desktop font size */
-      margin-bottom: 3px; /* Reduced margin */
-      white-space: nowrap; /* Single line */
-      overflow: hidden; /* Hide overflow */
-      text-overflow: ellipsis; /* Ellipsis for overflow */
-      max-width: 300px; /* Constrain width */
+      font-size: 1.3rem; /* Increased for desktop */
+      margin-bottom: 5px;
     }
     .modal-content {
       background: linear-gradient(135deg, #1a001a, #000033);
@@ -437,10 +426,8 @@
     }
     .fullscreen-modal .modal-dialog {
       max-width: 100%;
-      width: 100%;
-      height: 100vh;
       margin: 0;
-      padding: 0;
+      height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -450,31 +437,21 @@
       border: none;
       width: 100%;
       height: 100%;
-      margin: 0;
-      padding: 10px; /* Minimal padding to avoid edge cutting */
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
-      overflow: auto; /* Allow scrolling if needed */
     }
     .fullscreen-modal img, .fullscreen-modal video {
-      max-width: 100%;
-      max-height: 100%;
-      width: auto;
-      height: auto;
-      object-fit: contain; /* Maintain aspect ratio */
-      margin: 0 auto; /* Center horizontally */
-      transform: none; /* Remove any zoom */
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
     }
     .fullscreen-modal .btn-close {
       position: absolute;
       top: 20px;
       right: 20px;
       z-index: 1000;
-      background: rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      padding: 10px;
     }
     .toast-container {
       position: absolute;
@@ -551,20 +528,10 @@
       0% { box-shadow: 0 0 5px #ff4500; }
       100% { box-shadow: 0 0 20px #ff00ff, 0 0 30px #00ff00; }
     }
-    .gallery-container .row {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center; /* Center cards */
-      gap: 15px; /* Space between cards */
-    }
-    .gallery-container .card-col {
-      flex: 0 0 auto; /* Remove fixed width */
-      width: auto; /* Let width adjust to content */
-      margin-bottom: 15px; /* Consistent spacing */
-    }
     @media (max-width: 767px) {
       .gallery-card {
-        padding: 5px; /* Reduced padding for mobile */
+        margin-bottom: 20px;
+        padding: 10px; /* Reverted to original for mobile */
       }
       .btn-primary, .btn-danger, .home-btn, .submit-btn {
         padding: 10px 20px;
@@ -578,18 +545,21 @@
         height: 56px;
       }
       .gallery-card img, .gallery-card video {
-        height: 150px; /* Mobile height */
+        height: 150px; /* Reverted to original for mobile */
       }
       .card-body h5 {
-        font-size: 1.1rem; /* Mobile font size */
-        max-width: 200px; /* Constrain width for mobile */
+        font-size: 1.1rem; /* Reverted to original for mobile */
       }
       .card-body p {
-        font-size: 1rem; /* Mobile font size */
-        max-width: 200px; /* Constrain width for mobile */
+        font-size: 1rem; /* Reverted to original for mobile */
       }
       .gallery-container .row {
-        gap: 10px; /* Smaller gap for mobile */
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .gallery-container .col-sm-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
       }
       .form-select {
         font-size: 0.9rem;
@@ -614,18 +584,15 @@
       .nav-link {
         font-size: 1rem;
       }
-      .fullscreen-modal img, .fullscreen-modal video {
-        max-width: 100%;
-        max-height: 100%;
-        width: auto;
-        height: auto;
-        object-fit: contain;
-        transform: none; /* Remove any zoom */
-      }
     }
     @media (min-width: 992px) {
       .gallery-container .row {
-        justify-content: center;
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .gallery-container .col-lg-3 {
+        flex: 0 0 25%;
+        max-width: 25%;
       }
     }
   </style>
@@ -957,7 +924,7 @@
       data.forEach((art, index) => {
         console.log('Art file URL:', art.fileUrl, 'Type:', art.fileType);
         const card = document.createElement('div');
-        card.className = 'card-col';
+        card.className = 'col-lg-3 col-md-6 col-sm-6 mb-4';
         card.style.setProperty('--i', index);
         card.innerHTML = `
           <div class="card gallery-card" data-file="${art.fileUrl || ''}" data-type="${art.fileType || ''}">
@@ -990,19 +957,15 @@
           const fullscreenContent = document.getElementById('fullscreenArtContent');
           fullscreenContent.innerHTML = '';
 
-          console.log('Opening fullscreen modal with URL:', fileUrl, 'Type:', fileType); // Debug log
-
           if (fileUrl) {
             if (fileType && fileType.startsWith('image/')) {
-              fullscreenContent.innerHTML = `<img src="${fileUrl}" alt="Full-screen Art" style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; transform: none;">`;
+              fullscreenContent.innerHTML = `<img src="${fileUrl}" alt="Full-screen Art">`;
             } else if (fileType && (fileType === 'image/gif' || fileType.startsWith('video/'))) {
-              fullscreenContent.innerHTML = `<video src="${fileUrl}" controls autoplay loop playsinline style="max-width: 80%; max-height: 80%; width: auto; height: auto; object-fit: contain; transform: none;"></video>`;
+              fullscreenContent.innerHTML = `<video src="${fileUrl}" controls autoplay loop playsinline></video>`;
             }
             const fullscreenModal = new bootstrap.Modal(document.getElementById('fullscreenArtModal'));
             fullscreenModal.show();
             window.history.pushState({ modal: 'fullscreen' }, '', '#fullscreen');
-          } else {
-            console.error('No file URL found for this card');
           }
         });
       });
