@@ -929,9 +929,9 @@
         card.innerHTML = `
           <div class="card gallery-card" data-file="${art.fileUrl || ''}" data-type="${art.fileType || ''}">
             ${art.fileType && art.fileType.startsWith('image/') ? 
-              `<img src="${art.fileUrl}" class="card-img-top" style="height: 250px; object-fit: contain;" loading="lazy" onerror="this.src='https://via.placeholder.com/200x200?text=Image+Not+Found';">` : 
+              `<img src="${art.fileUrl}" class="card-img-top" style="height: 200px; object-fit: contain;" loading="lazy" onerror="this.src='https://via.placeholder.com/200x200?text=Image+Not+Found';">` : 
               art.fileType && (art.fileType === 'image/gif' || art.fileType.startsWith('video/')) ? 
-              `<video src="${art.fileUrl}" class="card-img-top" style="height: 250px; object-fit: contain;" loading="lazy" autoplay loop muted playsinline></video>` : 
+              `<video src="${art.fileUrl}" class="card-img-top" style="height: 200px; object-fit: contain;" loading="lazy" autoplay loop muted playsinline></video>` : 
               `<div style="height: 250px; background: #333; display: flex; align-items: center; justify-content: center;">Unsupported Format</div>`}
             <div class="card-body">
               <h5>${art.artistName}</h5>
