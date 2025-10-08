@@ -664,11 +664,11 @@
             </div>
           </div>
           <form id="artUploadForm">
-            <div class="mb-3"><label class="form-label">Artist Name</label><input type="text" class="form-control" id="artistName" required></div>
-            <div class="mb-3"><label class="form-label">X Username</label><input type="text" class="form-control" id="xUsername" placeholder="@username" required></div>
-            <div class="mb-3"><label class="form-label">Discord Username</label><input type="text" class="form-control" id="discordUsername" placeholder="User#1234" required></div>
-            <div class="mb-3"><label class="form-label">Upload Art (Images, GIFs, or Videos)</label><input type="file" class="form-control" id="artFile" accept="image/*,video/*,image/gif" multiple required></div>
-            <div class="mb-3"><label class="form-label">Description</label><textarea class="form-control" id="artDescription"></textarea></div>
+            <div class="mb-3"><label class="form-label">Artist Name *</label><input type="text" class="form-control" id="artistName" required></div>
+            <div class="mb-3"><label class="form-label">X Username (Optional)</label><input type="text" class="form-control" id="xUsername" placeholder="@username"></div>
+            <div class="mb-3"><label class="form-label">Discord Username (Optional)</label><input type="text" class="form-control" id="discordUsername" placeholder="User#1234"></div>
+            <div class="mb-3"><label class="form-label">Upload Art (Images, GIFs, or Videos) *</label><input type="file" class="form-control" id="artFile" accept="image/*,video/*,image/gif" multiple required></div>
+            <div class="mb-3"><label class="form-label">Description (Optional)</label><textarea class="form-control" id="artDescription"></textarea></div>
             <button type="submit" class="btn submit-btn" id="submitButton">Submit</button>
           </form>
         </div>
@@ -812,10 +812,10 @@
       toast.show();
 
       const artistName = document.getElementById('artistName').value;
-      const xUsername = document.getElementById('xUsername').value;
-      const discordUsername = document.getElementById('discordUsername').value;
+      const xUsername = document.getElementById('xUsername').value || ''; // Handle empty optional field
+      const discordUsername = document.getElementById('discordUsername').value || ''; // Handle empty optional field
       const artFiles = document.getElementById('artFile').files;
-      const artDescription = document.getElementById('artDescription').value;
+      const artDescription = document.getElementById('artDescription').value || ''; // Handle empty optional field
       const timestamp = Date.now();
 
       try {
