@@ -307,8 +307,10 @@
       animation-delay: calc(var(--i) * 0.1s);
       text-align: center;
       cursor: pointer;
-      padding: 10px;
+      padding: 0; /* Changed from 10px to 0 to remove extra space */
       backdrop-filter: blur(5px);
+      width: fit-content; /* Card size adjusts to content */
+      margin: 0 auto; /* Center the card */
     }
     .gallery-card:hover {
       transform: translateY(-10px);
@@ -319,13 +321,13 @@
       height: 200px;
       object-fit: contain;
       transition: transform 0.3s ease;
-      loading: lazy; /* Lazy loading for images/videos */
+      loading: lazy;
     }
     .gallery-card:hover img, .gallery-card:hover video {
       transform: scale(1.1);
     }
     .card-body {
-      padding: 10px;
+      padding: 5px; /* Changed from 10px to 5px for minimal spacing */
     }
     .card-body h5 {
       font-size: 1.25rem;
@@ -529,6 +531,17 @@
       0% { box-shadow: 0 0 5px #ff4500; }
       100% { box-shadow: 0 0 20px #ff00ff, 0 0 30px #00ff00; }
     }
+    .gallery-container .row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center; /* Center cards */
+      gap: 15px; /* Space between cards */
+    }
+    .gallery-container .card-col {
+      flex: 0 0 auto; /* Remove fixed width */
+      width: auto; /* Adjust to content */
+      margin-bottom: 15px; /* Consistent spacing */
+    }
     @media (max-width: 767px) {
       .gallery-card {
         margin-bottom: 20px;
@@ -553,14 +566,6 @@
       .card-body p {
         font-size: 1rem;
       }
-      .gallery-container .row {
-        display: flex;
-        flex-wrap: wrap;
-      }
-      .gallery-container .col-sm-6 {
-        flex: 0 0 50%;
-        max-width: 50%;
-      }
       .form-select {
         font-size: 0.9rem;
         padding: 6px;
@@ -583,16 +588,6 @@
       }
       .nav-link {
         font-size: 1rem;
-      }
-    }
-    @media (min-width: 992px) {
-      .gallery-container .row {
-        display: flex;
-        flex-wrap: wrap;
-      }
-      .gallery-container .col-lg-3 {
-        flex: 0 0 25%;
-        max-width: 25%;
       }
     }
   </style>
@@ -924,7 +919,7 @@
       data.forEach((art, index) => {
         console.log('Art file URL:', art.fileUrl, 'Type:', art.fileType);
         const card = document.createElement('div');
-        card.className = 'col-lg-3 col-md-6 col-sm-6 mb-4';
+        card.className = 'card-col'; /* Changed from col-lg-3 col-md-6 col-sm-6 mb-4 */
         card.style.setProperty('--i', index);
         card.innerHTML = `
           <div class="card gallery-card" data-file="${art.fileUrl || ''}" data-type="${art.fileType || ''}">
