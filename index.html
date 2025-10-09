@@ -307,11 +307,11 @@
       animation-delay: calc(var(--i) * 0.1s);
       text-align: center;
       cursor: pointer;
-      padding: 10px;
+      padding: 10px; /* Increased from 0 to 10px for slight extra space */
       backdrop-filter: blur(5px);
       width: fit-content;
       margin: 0 auto;
-      max-width: 320px;
+      max-width: 320px; /* Increased from 300px to accommodate padding */
     }
     .gallery-card:hover {
       transform: translateY(-10px);
@@ -319,7 +319,7 @@
     }
     .gallery-card img, .gallery-card video {
       width: 100%;
-      height: 250px; /* Increased from 200px */
+      height: 200px;
       object-fit: contain;
       transition: transform 0.3s ease;
       loading: lazy;
@@ -328,17 +328,15 @@
       transform: scale(1.1);
     }
     .card-body {
-      padding: 10px;
+      padding: 10px; /* Increased from 5px to 10px for extra space around info */
     }
     .card-body h5 {
       font-size: 1.25rem;
       margin-bottom: 5px;
-      color: #8B4513 !important; /* Brown color for artist name */
     }
     .card-body p {
       font-size: 1.1rem;
       margin-bottom: 5px;
-      color: #8B4513 !important; /* Brown color for info text */
     }
     .modal-content {
       background: linear-gradient(135deg, #1a001a, #000033);
@@ -537,10 +535,8 @@
     .gallery-container .row {
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-between; /* Changed from center to reduce edge gaps */
+      justify-content: center;
       gap: 15px;
-      margin-left: 10px; /* Minimal gap from left edge */
-      margin-right: 10px; /* Minimal gap from right edge */
     }
     .gallery-container .card-col {
       flex: 0 0 auto;
@@ -550,21 +546,14 @@
     @media (max-width: 767px) {
       .gallery-card {
         margin-bottom: 20px;
-        max-width: 220px;
-      }
-      .gallery-container .row {
-        justify-content: space-between; /* Keep space-between for mobile */
-        margin-left: 5px; /* Tighter gap from left edge */
-        margin-right: 5px; /* Tighter gap from right edge */
+        max-width: 220px; /* Increased from 200px to accommodate padding */
       }
       .gallery-container .card-col {
-        flex: 0 0 calc(50% - 7.5px); /* 2 cards per row */
+        flex: 0 0 calc(50% - 7.5px); /* 2 cards per row, accounting for 15px gap */
         width: auto;
       }
       .gallery-container .card-col:has(.gallery-card.wide-card) {
-        flex: 0 0 100%; /* Single row for wide cards */
-        margin-left: 5px; /* Align with row margin */
-        margin-right: 5px;
+        flex: 0 0 100%; /* Single card per row if wide */
       }
       .btn-primary, .btn-danger, .home-btn, .submit-btn {
         padding: 10px 20px;
@@ -578,15 +567,13 @@
         height: 56px;
       }
       .gallery-card img, .gallery-card video {
-        height: 180px; /* Increased from 150px */
+        height: 150px;
       }
       .card-body h5 {
         font-size: 1.1rem;
-        color: #8B4513 !important; /* Brown color for artist name */
       }
       .card-body p {
         font-size: 1rem;
-        color: #8B4513 !important; /* Brown color for info text */
       }
       .form-select {
         font-size: 0.9rem;
@@ -686,9 +673,8 @@
             <div class="mb-3"><label class="form-label">X Username (Optional)</label><input type="text" class="form-control" id="xUsername" placeholder="@username"></div>
             <div class="mb-3"><label class="form-label">Discord Username (Optional)</label><input type="text" class="form-control" id="discordUsername" placeholder="User#1234"></div>
             <div class="mb-3"><label class="form-label">Upload Art (Images, GIFs, or Videos) *</label><input type="file" class="form-control" id="artFile" accept="image/*,video/*,image/gif" multiple required></div>
-            <div class="mbਕ
             <div class="mb-3"><label class="form-label">Description (Optional)</label><textarea class="form-control" id="artDescription"></textarea></div>
-            <button type="submit" class="btn submit-btn" id="submitButton mesmerizing-btn">Submit</button>
+            <button type="submit" class="btn submit-btn" id="submitButton">Submit</button>
           </form>
         </div>
       </div>
@@ -948,10 +934,10 @@
         card.innerHTML = `
           <div class="card gallery-card ${isWide ? 'wide-card' : ''}" data-file="${art.fileUrl || ''}" data-type="${art.fileType || ''}">
             ${art.fileType && art.fileType.startsWith('image/') ? 
-              `<img src="${art.fileUrl}" class="card-img-top" style="height: 250px; object-fit: contain;" loading="lazy" onerror="this.src='https://via.placeholder.com/250x250?text=Image+Not+Found';">` : 
+              `<img src="${art.fileUrl}" class="card-img-top" style="height: 200px; object-fit: contain;" loading="lazy" onerror="this.src='https://via.placeholder.com/200x200?text=Image+Not+Found';">` : 
               art.fileType && (art.fileType === 'image/gif' || art.fileType.startsWith('video/')) ? 
-              `<video src="${art.fileUrl}" class="card-img-top" style="height: 250px; object-fit: contain;" loading="lazy" autoplay loop muted playsinline></video>` : 
-              `<div style="height: 250px; background: #333; display: flex; align-items: center; justify-content: center;">Unsupported Format</div>`}
+              `<video src="${art.fileUrl}" class="card-img-top" style="height: 200px; object-fit: contain;" loading="lazy" autoplay loop muted playsinline></video>` : 
+              `<div style="height: 200px; background: #333; display: flex; align-items: center; justify-content: center;">Unsupported Format</div>`}
             <div class="card-body">
               <h5>${art.artistName}</h5>
               ${art.xUsername ? `<p>X: ${art.xUsername}</p>` : ''}
