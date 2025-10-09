@@ -294,8 +294,8 @@
       background: transparent;
     }
     .container.gallery-container {
-      padding-left: 5px;
-      padding-right: 5px;
+      padding-left: 3px;
+      padding-right: 3px;
       max-width: 100%;
     }
     .card {
@@ -316,11 +316,19 @@
       backdrop-filter: blur(5px);
       width: fit-content;
       margin: 0 auto;
-      max-width: 360px;
-      margin-right: 8px; /* Dynamic gap for normal cards */
+      max-width: 48vw;
+      margin-right: 6px;
     }
     .gallery-card.wide-card {
-      margin-right: 4px; /* Smaller gap for wide cards */
+      flex: 0 0 70%; /* Larger card takes ~70% width */
+      margin-right: 2px;
+      max-width: 70vw; /* Ensure it doesn't exceed viewport */
+    }
+    .gallery-card + .gallery-card {
+      flex: 0 0 30%; /* Next card takes ~30% width if after wide-card */
+    }
+    .gallery-card + .gallery-card.wide-card + .gallery-card {
+      flex: 0 0 calc(50% - 3px); /* Reset to two-per-row after two wide-cards */
     }
     .gallery-card:hover {
       transform: translateY(-10px);
@@ -328,7 +336,7 @@
     }
     .gallery-card img, .gallery-card video {
       width: 100%;
-      height: 220px;
+      height: 150px;
       object-fit: contain;
       transition: transform 0.3s ease;
       loading: lazy;
@@ -340,11 +348,11 @@
       padding: 10px;
     }
     .card-body h5 {
-      font-size: 1.25rem;
+      font-size: 1.1rem;
       margin-bottom: 5px;
     }
     .card-body p {
-      font-size: 1.1rem;
+      font-size: 1rem;
       margin-bottom: 5px;
     }
     .modal-content {
@@ -546,22 +554,37 @@
       margin-right: 0;
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-between;
-      /* Removed fixed gap to use dynamic margin-right */
+      justify-content: flex-start; /* Changed to flex-start for better control */
     }
     .gallery-container .card-col {
-      flex: 0 0 auto;
-      width: auto;
+      flex: 0 0 calc(50% - 3px); /* Default to two-per-row */
       margin-bottom: 10px;
+    }
+    .gallery-container .card-col:has(.gallery-card.wide-card) {
+      flex: 0 0 70%; /* Wide card takes ~70% */
+    }
+    .gallery-container .card-col:has(.gallery-card.wide-card) + .card-col {
+      flex: 0 0 30%; /* Next card takes ~30% if room allows */
+    }
+    .gallery-container .card-col:has(.gallery-card.wide-card) + .card-col:has(.gallery-card.wide-card) + .card-col {
+      flex: 0 0 calc(50% - 3px); /* Reset to two-per-row after two wide-cards */
     }
     @media (max-width: 767px) {
       .gallery-card {
         margin-bottom: 20px;
         max-width: 48vw;
-        margin-right: 6px; /* Dynamic gap for normal cards on mobile */
+        margin-right: 6px;
       }
       .gallery-card.wide-card {
-        margin-right: 2px; /* Smaller gap for wide cards on mobile */
+        flex: 0 0 70%; /* Larger card takes ~70% width */
+        margin-right: 2px;
+        max-width: 70vw;
+      }
+      .gallery-card + .gallery-card {
+        flex: 0 0 30%; /* Next card takes ~30% width if after wide-card */
+      }
+      .gallery-card + .gallery-card.wide-card + .gallery-card {
+        flex: 0 0 calc(50% - 3px); /* Reset to two-per-row after two wide-cards */
       }
       .container.gallery-container {
         padding-left: 3px;
@@ -570,14 +593,18 @@
       .gallery-container .row {
         margin-left: 0;
         margin-right: 0;
-        /* Removed fixed gap */
       }
       .gallery-container .card-col {
-        flex: 0 0 calc(50% - 3px); /* Adjusted for dynamic margin-right */
+        flex: 0 0 calc(50% - 3px); /* Default two-per-row */
       }
       .gallery-container .card-col:has(.gallery-card.wide-card) {
-        flex: 0 0 100%;
-        margin-right: 0; /* No margin for wide cards */
+        flex: 0 0 70%;
+      }
+      .gallery-container .card-col:has(.gallery-card.wide-card) + .card-col {
+        flex: 0 0 30%;
+      }
+      .gallery-container .card-col:has(.gallery-card.wide-card) + .card-col:has(.gallery-card.wide-card) + .card-col {
+        flex: 0 0 calc(50% - 3px); /* Reset to two-per-row */
       }
       .gallery-card img, .gallery-card video {
         height: 150px;
@@ -621,6 +648,32 @@
       }
       .nav-link {
         font-size: 1rem;
+      }
+    }
+    @media (min-width: 768px) {
+      .gallery-card {
+        max-width: 360px;
+        margin-right: 8px;
+      }
+      .gallery-card.wide-card {
+        flex: 0 0 70%;
+        margin-right: 4px;
+        max-width: 70%;
+      }
+      .gallery-card + .gallery-card {
+        flex: 0 0 30%;
+      }
+      .gallery-card + .gallery-card.wide-card + .gallery-card {
+        flex: 0 0 calc(33.33% - 5.33px); /* Adjust for three-per-row if needed */
+      }
+      .gallery-card img, .gallery-card video {
+        height: 220px;
+      }
+      .card-body h5 {
+        font-size: 1.25rem;
+      }
+      .card-body p {
+        font-size: 1.1rem;
       }
     }
   </style>
@@ -958,16 +1011,16 @@
         card.innerHTML = `
           <div class="card gallery-card ${isWide ? 'wide-card' : ''}" data-file="${art.fileUrl || ''}" data-type="${art.fileType || ''}">
             ${art.fileType && art.fileType.startsWith('image/') ? 
-              `<img src="${art.fileUrl}" class="card-img-top" style="height: 220px; object-fit: contain;" loading="lazy" onerror="this.src='https://via.placeholder.com/200x200?text=Image+Not+Found';">` : 
+              `<img src="${art.fileUrl}" class="card-img-top" style="height: 150px; object-fit: contain;" loading="lazy" onerror="this.src='https://via.placeholder.com/200x200?text=Image+Not+Found';">` : 
               art.fileType && (art.fileType === 'image/gif' || art.fileType.startsWith('video/')) ? 
-              `<video src="${art.fileUrl}" class="card-img-top" style="height: 220px; object-fit: contain;" loading="lazy" autoplay loop muted playsinline></video>` : 
-              `<div style="height: 220px; background: #333; display: flex; align-items: center; justify-content: center;">Unsupported Format</div>`}
+              `<video src="${art.fileUrl}" class="card-img-top" style="height: 150px; object-fit: contain;" loading="lazy" autoplay loop muted playsinline></video>` : 
+              `<div style="height: 150px; background: #333; display: flex; align-items: center; justify-content: center;">Unsupported Format</div>`}
             <div class="card-body">
               <h5>${art.artistName}</h5>
               ${art.xUsername ? `<p>X: ${art.xUsername}</p>` : ''}
               ${art.discordUsername ? `<p>DC: ${art.discordUsername}</p>` : ''}
               ${art.description ? `<p>${art.description}</p>` : ''}
-              ${isAdminLoggedIn ? `<button class="card-btn btn btn-danger btn-sm" data-id="${art.id}" data-url="${art.fileUrl || ''}">Delete</button>` : ''}
+              ${isAdminLoggedIn ? `<button class="btn btn-danger btn-sm" data-id="${art.id}" data-url="${art.fileUrl || ''}">Delete</button>` : ''}
             </div>
           </div>
         `;
@@ -988,9 +1041,9 @@
 
           if (fileUrl) {
             if (fileType && fileType.startsWith('image/')) {
-              fullscreenContent.innerHTML = `<img src="${art.fileUrl}" alt="Full-screen Art">`;
+              fullscreenContent.innerHTML = `<img src="${fileUrl}" alt="Full-screen Art">`;
             } else if (fileType && (fileType === 'image/gif' || fileType.startsWith('video/'))) {
-              fullscreenContent.innerHTML = `<video src="${art.fileUrl}" controls autoplay loop playsinline></video>`;
+              fullscreenContent.innerHTML = `<video src="${fileUrl}" controls autoplay loop playsinline></video>`;
             }
             const fullscreenModal = new bootstrap.Modal(document.getElementById('fullscreenArtModal'));
             fullscreenModal.show();
