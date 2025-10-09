@@ -456,9 +456,21 @@
       position: relative;
     }
     .fullscreen-modal img, .fullscreen-modal video {
-      max-width: 90%;
-      max-height: 90%;
+      max-width: 80vw; /* Adjusted for better scaling on desktop */
+      max-height: 80vh; /* Adjusted for better scaling on desktop */
+      width: auto; /* Maintain aspect ratio */
+      height: auto; /* Maintain aspect ratio */
       object-fit: contain;
+    }
+    /* Ensure mobile behavior remains unchanged */
+    @media (max-width: 767px) {
+      .fullscreen-modal img, .fullscreen-modal video {
+        max-width: 90%; /* Original value for mobile */
+        max-height: 90%; /* Original value for mobile */
+        width: auto;
+        height: auto;
+        object-fit: contain;
+      }
     }
     .fullscreen-modal .btn-close {
       position: absolute;
