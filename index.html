@@ -462,11 +462,11 @@
       height: auto; /* Maintain aspect ratio */
       object-fit: contain;
     }
-    /* Ensure mobile behavior remains unchanged */
+    /* Ensure mobile behavior is slightly larger */
     @media (max-width: 767px) {
       .fullscreen-modal img, .fullscreen-modal video {
-        max-width: 90%; /* Original value for mobile */
-        max-height: 90%; /* Original value for mobile */
+        max-width: 95%; /* Increased from 90% to make image larger on mobile */
+        max-height: 95%; /* Increased from 90% to make image larger on mobile */
         width: auto;
         height: auto;
         object-fit: contain;
