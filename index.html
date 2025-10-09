@@ -317,6 +317,10 @@
       width: fit-content;
       margin: 0 auto;
       max-width: 360px;
+      margin-right: 8px; /* Dynamic gap for normal cards */
+    }
+    .gallery-card.wide-card {
+      margin-right: 4px; /* Smaller gap for wide cards */
     }
     .gallery-card:hover {
       transform: translateY(-10px);
@@ -543,7 +547,7 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      gap: 5px;
+      /* Removed fixed gap to use dynamic margin-right */
     }
     .gallery-container .card-col {
       flex: 0 0 auto;
@@ -553,7 +557,11 @@
     @media (max-width: 767px) {
       .gallery-card {
         margin-bottom: 20px;
-        max-width: 48vw; /* Adjusted to fit two cards */
+        max-width: 48vw;
+        margin-right: 6px; /* Dynamic gap for normal cards on mobile */
+      }
+      .gallery-card.wide-card {
+        margin-right: 2px; /* Smaller gap for wide cards on mobile */
       }
       .container.gallery-container {
         padding-left: 3px;
@@ -562,16 +570,17 @@
       .gallery-container .row {
         margin-left: 0;
         margin-right: 0;
-        gap: 4px;
+        /* Removed fixed gap */
       }
       .gallery-container .card-col {
-        flex: 0 0 calc(50% - 2px);
+        flex: 0 0 calc(50% - 3px); /* Adjusted for dynamic margin-right */
       }
       .gallery-container .card-col:has(.gallery-card.wide-card) {
         flex: 0 0 100%;
+        margin-right: 0; /* No margin for wide cards */
       }
       .gallery-card img, .gallery-card video {
-        height: 150px; /* Adjusted for proportionality */
+        height: 150px;
       }
       .card-body h5 {
         font-size: 1.1rem;
@@ -958,7 +967,7 @@
               ${art.xUsername ? `<p>X: ${art.xUsername}</p>` : ''}
               ${art.discordUsername ? `<p>DC: ${art.discordUsername}</p>` : ''}
               ${art.description ? `<p>${art.description}</p>` : ''}
-              ${isAdminLoggedIn ? `<button class="btn btn-danger btn-sm" data-id="${art.id}" data-url="${art.fileUrl || ''}">Delete</button>` : ''}
+              ${isAdminLoggedIn ? `<button class="card-btn btn btn-danger btn-sm" data-id="${art.id}" data-url="${art.fileUrl || ''}">Delete</button>` : ''}
             </div>
           </div>
         `;
@@ -979,9 +988,9 @@
 
           if (fileUrl) {
             if (fileType && fileType.startsWith('image/')) {
-              fullscreenContent.innerHTML = `<img src="${fileUrl}" alt="Full-screen Art">`;
+              fullscreenContent.innerHTML = `<img src="${art.fileUrl}" alt="Full-screen Art">`;
             } else if (fileType && (fileType === 'image/gif' || fileType.startsWith('video/'))) {
-              fullscreenContent.innerHTML = `<video src="${fileUrl}" controls autoplay loop playsinline></video>`;
+              fullscreenContent.innerHTML = `<video src="${art.fileUrl}" controls autoplay loop playsinline></video>`;
             }
             const fullscreenModal = new bootstrap.Modal(document.getElementById('fullscreenArtModal'));
             fullscreenModal.show();
