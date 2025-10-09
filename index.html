@@ -320,15 +320,9 @@
       margin-right: 6px;
     }
     .gallery-card.wide-card {
-      flex: 0 0 70%; /* Larger card takes ~70% width */
+      flex: 0 0 100%; /* Reverted to full width for wide cards */
       margin-right: 2px;
-      max-width: 70vw; /* Ensure it doesn't exceed viewport */
-    }
-    .gallery-card + .gallery-card {
-      flex: 0 0 30%; /* Next card takes ~30% width if after wide-card */
-    }
-    .gallery-card + .gallery-card.wide-card + .gallery-card {
-      flex: 0 0 calc(50% - 3px); /* Reset to two-per-row after two wide-cards */
+      max-width: 100vw;
     }
     .gallery-card:hover {
       transform: translateY(-10px);
@@ -554,20 +548,12 @@
       margin-right: 0;
       display: flex;
       flex-wrap: wrap;
-      justify-content: flex-start; /* Changed to flex-start for better control */
+      justify-content: space-between;
     }
     .gallery-container .card-col {
-      flex: 0 0 calc(50% - 3px); /* Default to two-per-row */
+      flex: 0 0 auto;
+      width: auto;
       margin-bottom: 10px;
-    }
-    .gallery-container .card-col:has(.gallery-card.wide-card) {
-      flex: 0 0 70%; /* Wide card takes ~70% */
-    }
-    .gallery-container .card-col:has(.gallery-card.wide-card) + .card-col {
-      flex: 0 0 30%; /* Next card takes ~30% if room allows */
-    }
-    .gallery-container .card-col:has(.gallery-card.wide-card) + .card-col:has(.gallery-card.wide-card) + .card-col {
-      flex: 0 0 calc(50% - 3px); /* Reset to two-per-row after two wide-cards */
     }
     @media (max-width: 767px) {
       .gallery-card {
@@ -576,15 +562,9 @@
         margin-right: 6px;
       }
       .gallery-card.wide-card {
-        flex: 0 0 70%; /* Larger card takes ~70% width */
+        flex: 0 0 100%; /* Reverted to full width */
         margin-right: 2px;
-        max-width: 70vw;
-      }
-      .gallery-card + .gallery-card {
-        flex: 0 0 30%; /* Next card takes ~30% width if after wide-card */
-      }
-      .gallery-card + .gallery-card.wide-card + .gallery-card {
-        flex: 0 0 calc(50% - 3px); /* Reset to two-per-row after two wide-cards */
+        max-width: 100vw;
       }
       .container.gallery-container {
         padding-left: 3px;
@@ -595,16 +575,11 @@
         margin-right: 0;
       }
       .gallery-container .card-col {
-        flex: 0 0 calc(50% - 3px); /* Default two-per-row */
+        flex: 0 0 calc(50% - 3px);
       }
       .gallery-container .card-col:has(.gallery-card.wide-card) {
-        flex: 0 0 70%;
-      }
-      .gallery-container .card-col:has(.gallery-card.wide-card) + .card-col {
-        flex: 0 0 30%;
-      }
-      .gallery-container .card-col:has(.gallery-card.wide-card) + .card-col:has(.gallery-card.wide-card) + .card-col {
-        flex: 0 0 calc(50% - 3px); /* Reset to two-per-row */
+        flex: 0 0 100%;
+        margin-right: 0;
       }
       .gallery-card img, .gallery-card video {
         height: 150px;
@@ -656,15 +631,7 @@
         margin-right: 8px;
       }
       .gallery-card.wide-card {
-        flex: 0 0 70%;
         margin-right: 4px;
-        max-width: 70%;
-      }
-      .gallery-card + .gallery-card {
-        flex: 0 0 30%;
-      }
-      .gallery-card + .gallery-card.wide-card + .gallery-card {
-        flex: 0 0 calc(33.33% - 5.33px); /* Adjust for three-per-row if needed */
       }
       .gallery-card img, .gallery-card video {
         height: 220px;
