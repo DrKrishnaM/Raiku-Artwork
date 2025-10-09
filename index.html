@@ -287,6 +287,7 @@
     }
     .section {
       padding: 50px 0;
+      backgroundcursor: pointer;
       background: transparent;
       animation: fadeIn 1s ease-in;
     }
@@ -317,7 +318,7 @@
       backdrop-filter: blur(5px);
       width: fit-content;
       margin: 0 auto;
-      max-width: 320px;
+      max-width: 360px; /* Increased from 320px */
     }
     .gallery-card:hover {
       transform: translateY(-10px);
@@ -325,7 +326,7 @@
     }
     .gallery-card img, .gallery-card video {
       width: 100%;
-      height: 200px;
+      height: 220px; /* Increased from 200px */
       object-fit: contain;
       transition: transform 0.3s ease;
       loading: lazy;
@@ -545,7 +546,7 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      gap: 10px;
+      gap: 5px; /* Reduced from 10px */
     }
     .gallery-container .card-col {
       flex: 0 0 auto;
@@ -555,7 +556,7 @@
     @media (max-width: 767px) {
       .gallery-card {
         margin-bottom: 20px;
-        max-width: 220px;
+        max-width: 240px; /* Increased from 220px */
       }
       .container.gallery-container {
         padding-left: 3px;
@@ -564,10 +565,10 @@
       .gallery-container .row {
         margin-left: 0;
         margin-right: 0;
-        gap: 8px;
+        gap: 4px; /* Reduced from 8px */
       }
       .gallery-container .card-col {
-        flex: 0 0 calc(50% - 4px);
+        flex: 0 0 calc(50% - 2px); /* Adjusted for smaller gap */
       }
       .gallery-container .card-col:has(.gallery-card.wide-card) {
         flex: 0 0 100%;
@@ -584,7 +585,7 @@
         height: 56px;
       }
       .gallery-card img, .gallery-card video {
-        height: 150px;
+        height: 160px; /* Increased from 150px */
       }
       .card-body h5 {
         font-size: 1.1rem;
@@ -951,10 +952,10 @@
         card.innerHTML = `
           <div class="card gallery-card ${isWide ? 'wide-card' : ''}" data-file="${art.fileUrl || ''}" data-type="${art.fileType || ''}">
             ${art.fileType && art.fileType.startsWith('image/') ? 
-              `<img src="${art.fileUrl}" class="card-img-top" style="height: 200px; object-fit: contain;" loading="lazy" onerror="this.src='https://via.placeholder.com/200x200?text=Image+Not+Found';">` : 
+              `<img src="${art.fileUrl}" class="card-img-top" style="height: 220px; object-fit: contain;" loading="lazy" onerror="this.src='https://via.placeholder.com/200x200?text=Image+Not+Found';">` : 
               art.fileType && (art.fileType === 'image/gif' || art.fileType.startsWith('video/')) ? 
-              `<video src="${art.fileUrl}" class="card-img-top" style="height: 200px; object-fit: contain;" loading="lazy" autoplay loop muted playsinline></video>` : 
-              `<div style="height: 200px; background: #333; display: flex; align-items: center; justify-content: center;">Unsupported Format</div>`}
+              `<video src="${art.fileUrl}" class="card-img-top" style="height: 220px; object-fit: contain;" loading="lazy" autoplay loop muted playsinline></video>` : 
+              `<div style="height: 220px; background: #333; display: flex; align-items: center; justify-content: center;">Unsupported Format</div>`}
             <div class="card-body">
               <h5>${art.artistName}</h5>
               ${art.xUsername ? `<p>X: ${art.xUsername}</p>` : ''}
