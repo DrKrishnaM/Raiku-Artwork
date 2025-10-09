@@ -978,23 +978,34 @@
 
       document.querySelectorAll('.gallery-card').forEach(card => {
         card.addEventListener('click', (e) => {
-          if (e.target.classList.contains('btn-danger')) return;
+          if (e.target.classList.contains('btn-danger')) return; // Ignore delete button clicks
 
-          lastScrollPosition = window.scrollY;
           const fileUrl = card.getAttribute('data-file');
           const fileType = card.getAttribute('data-type');
-          const fullscreenContent = document.getElementById('fullscreenArtContent');
-          fullscreenContent.innerHTML = '';
+          console.log('Clicked card - File URL:', fileUrl, 'File Type:', fileType); // Debug log
 
-          if (fileUrl) {
-            if (fileType && fileType.startsWith('image/')) {
-              fullscreenContent.innerHTML = `<img src="${art.fileUrl}" alt="Full-screen Art">`;
-            } else if (fileType && (fileType === 'image/gif' || fileType.startsWith('video/'))) {
-              fullscreenContent.innerHTML = `<video src="${art.fileUrl}" controls autoplay loop playsinline></video>`;
+          if (fileUrl && fileType) {
+            lastScrollPosition = window.scrollY;
+            const fullscreenContent = document.getElementById('fullscreenArtContent');
+            fullscreenContent.innerHTML = '';
+
+            if (fileType.startsWith('image/')) {
+              fullscreenContent.innerHTML = `<img src="${fileUrl}" alt="Full-screen Art">`;
+            } else if (fileType === 'image/gif' || fileType.startsWith('video/')) {
+              fullscreenContent.innerHTML = `<video src="${fileUrl}" controls autoplay loop playsinline></video>`;
+            } else {
+              console.error('Unsupported file type:', fileType);
+              return;
             }
-            const fullscreenModal = new bootstrap.Modal(document.getElementById('fullscreenArtModal'));
+
+            const fullscreenModal = new bootstrap.Modal(document.getElementById('fullscreenArtModal'), {
+              backdrop: true,
+              keyboard: true
+            });
             fullscreenModal.show();
             window.history.pushState({ modal: 'fullscreen' }, '', '#fullscreen');
+          } else {
+            console.error('Invalid file URL or type:', fileUrl, fileType);
           }
         });
       });
