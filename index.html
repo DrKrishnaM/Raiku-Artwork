@@ -293,6 +293,12 @@
     .container {
       background: transparent;
     }
+    /* Modified: Gallery container padding */
+    .container.gallery-container {
+      padding-left: 5px;
+      padding-right: 5px;
+      max-width: 100%;
+    }
     .card {
       background: transparent;
       border: none;
@@ -307,11 +313,11 @@
       animation-delay: calc(var(--i) * 0.1s);
       text-align: center;
       cursor: pointer;
-      padding: 10px; /* Increased from 0 to 10px for slight extra space */
+      padding: 10px;
       backdrop-filter: blur(5px);
       width: fit-content;
       margin: 0 auto;
-      max-width: 320px; /* Increased from 300px to accommodate padding */
+      max-width: 320px;
     }
     .gallery-card:hover {
       transform: translateY(-10px);
@@ -328,7 +334,7 @@
       transform: scale(1.1);
     }
     .card-body {
-      padding: 10px; /* Increased from 5px to 10px for extra space around info */
+      padding: 10px;
     }
     .card-body h5 {
       font-size: 1.25rem;
@@ -532,28 +538,39 @@
       0% { box-shadow: 0 0 5px #ff4500; }
       100% { box-shadow: 0 0 20px #ff00ff, 0 0 30px #00ff00; }
     }
+    /* Modified: Gallery row and card layout */
     .gallery-container .row {
+      margin-left: 0;
+      margin-right: 0;
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
+      justify-content: space-between;
+      gap: 10px;
     }
     .gallery-container .card-col {
       flex: 0 0 auto;
       width: auto;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
     }
     @media (max-width: 767px) {
       .gallery-card {
         margin-bottom: 20px;
-        max-width: 220px; /* Increased from 200px to accommodate padding */
+        max-width: 220px;
+      }
+      .container.gallery-container {
+        padding-left: 3px;
+        padding-right: 3px;
+      }
+      .gallery-container .row {
+        margin-left: 0;
+        margin-right: 0;
+        gap: 8px;
       }
       .gallery-container .card-col {
-        flex: 0 0 calc(50% - 7.5px); /* 2 cards per row, accounting for 15px gap */
-        width: auto;
+        flex: 0 0 calc(50% - 4px);
       }
       .gallery-container .card-col:has(.gallery-card.wide-card) {
-        flex: 0 0 100%; /* Single card per row if wide */
+        flex: 0 0 100%;
       }
       .btn-primary, .btn-danger, .home-btn, .submit-btn {
         padding: 10px 20px;
